@@ -1,0 +1,13 @@
+= Lbrary - Connector
+
+The Lbrary - Connector Submodule contains all modules necessary to write a connector for the Lbrary Platform.
+
+== Getting Started
+To access the code locally, just checkout the code to your local machine using:
+
+=== Local Build
+
+== Contribution
+
+== Q&A
+

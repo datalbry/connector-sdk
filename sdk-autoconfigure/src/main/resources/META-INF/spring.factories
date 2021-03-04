@@ -1,0 +1,7 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+io.lbrary.connector.autoconfigure.FeignPlatformClientAutoConfiguration,\
+io.lbrary.connector.autoconfigure.GenericCrawlProcessorAutoConfiguration,\
+io.lbrary.connector.autoconfigure.jms.JmsAutoConfiguration,\
+io.lbrary.connector.autoconfigure.jms.JmsChannelAutoConfiguration,\
+io.lbrary.connector.autoconfigure.jms.MessageConsumerAutoConfiguration,\
+io.lbrary.connector.autoconfigure.state.JpaConnectorDocumentStateAutoConfiguration
