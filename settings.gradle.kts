@@ -6,9 +6,7 @@ include(
         "sdk",
         "sdk-api",
         "sdk-autoconfigure",
-        "sdk-starter",
-
-        "config-schema"
+        "sdk-starter"
 )
 
 pluginManagement {
