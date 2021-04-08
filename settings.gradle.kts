@@ -1,7 +1,5 @@
 rootProject.name = "connector-sdk"
 
-
-
 include(
         "sdk",
         "sdk-api",
