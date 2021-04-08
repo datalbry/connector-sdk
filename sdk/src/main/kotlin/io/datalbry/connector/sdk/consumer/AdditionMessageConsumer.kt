@@ -17,8 +17,8 @@ import org.springframework.jms.annotation.JmsListener
  * The [AdditionMessageConsumer] contains the logic on how to consume JMS messages (in form of [DocumentEdge])
  *
  * Internally relying on a single [CrawlProcessor] of type [DocumentEdge] and [Document].
- * By default we are using the [io.lbrary.connector.sdk.consumer.generic.GenericCrawlProcessor] which is able to
- * map [io.lbrary.connector.sdk.consumer.generic.GenericCrawlProcessor] to the non generic type required by the
+ * By default we are using the [io.datalbry.connector.sdk.consumer.generic.GenericCrawlProcessor] which is able to
+ * map [io.datalbry.connector.sdk.consumer.generic.GenericCrawlProcessor] to the non generic type required by the
  * connector sdk.
  *
  * There are a few things to mention.

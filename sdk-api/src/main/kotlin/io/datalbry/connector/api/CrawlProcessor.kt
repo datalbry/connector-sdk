@@ -4,10 +4,10 @@ package io.datalbry.connector.api
  * High-level [CrawlProcessor] interface
  *
  * Is being used to provide different feature.
- * To implement a high-level crawl processor for [io.lbrary.service.index.api.document.Document]s,
- * one has to implement a [io.lbrary.connector.api.document.DocumentCrawlProcessor].
+ * To implement a high-level crawl processor for [io.datalbry.precise.api.schema.document.Document]s,
+ * one has to implement a [io.datalbry.connector.api.document.DocumentCrawlProcessor].
  *
- * @see io.lbrary.connector.api.document.DocumentCrawlProcessor
+ * @see io.datalbry.connector.api.document.DocumentCrawlProcessor
  *
  * @param Edges type to consume
  * @param Produces type to produce

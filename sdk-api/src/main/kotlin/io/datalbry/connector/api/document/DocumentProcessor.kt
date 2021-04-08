@@ -10,9 +10,9 @@ package io.datalbry.connector.api.document
  *
  * _IMPORTANT:_
  * There is at least one implementation which has to be present at runtime.
- * [DocumentProcessor] which consumes [io.lbrary.connector.api.root.DocumentRoot] which indicates the start of the traversal.
+ * [DocumentProcessor] which consumes [io.datalbry.connector.api.root.DocumentRoot] which indicates the start of the traversal.
  *
- * @see [io.lbrary.connector.api.root.DocumentRoot]
+ * @see [io.datalbry.connector.api.root.DocumentRoot]
  *
  * @author timo gruen - 2020-12-27
  */

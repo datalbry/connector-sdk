@@ -5,8 +5,8 @@ package io.datalbry.connector.api.annotation.stereotype
  *
  * Marks an so it gets processed by the connector-sdk.
  *
- * [io.lbrary.es.connector.api.v1.CrawlProcessor] is able to produce items at runtime.
- * All produced items are analysed and being converted to [io.lbrary.es.platform.api.index.Document].
+ * [io.datalbry.connector.api.CrawlProcessor] is able to produce items at runtime.
+ * All produced items are analysed and being converted to [io.datalbry.precise.api.schema.document.Document]s.
  *
  * @author timo gruen - 2020-11-11
  */
