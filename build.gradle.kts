@@ -20,7 +20,7 @@ plugins {
 
 subprojects {
     apply(plugin = "maven-publish")
-    version = "2020.01-SNAPSHOT"
+    version = "0.0.1-SNAPSHOT"
     group = "io.datalbry.connector"
 
     repositories {
