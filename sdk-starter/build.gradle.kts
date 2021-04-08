@@ -20,7 +20,7 @@ tasks.getByName<BootJar>("bootJar") {
 // ===========================================================================================
 
 dependencies {
-    api(project(":connector:api"))
-    implementation(project(":connector:sdk-autoconfigure"))
-    implementation(project(":connector:sdk"))
+    api(project(":sdk-api"))
+    implementation(project(":sdk"))
+    implementation(project(":sdk-autoconfigure"))
 }

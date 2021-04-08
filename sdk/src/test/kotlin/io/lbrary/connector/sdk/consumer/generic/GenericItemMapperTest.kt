@@ -1,12 +1,13 @@
 package io.lbrary.connector.sdk.consumer.generic
 
-import io.lbrary.connector.api.extensions.get
 import io.lbrary.connector.sdk.consumer.generic.documents.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.net.URI
 import java.time.ZonedDateTime
 import java.util.*
+import kotlin.NoSuchElementException
 
 internal class GenericItemMapperTest {
 
@@ -17,11 +18,25 @@ internal class GenericItemMapperTest {
 
         val document = mapper.getDocuments(item).first()
         val id = UUID.nameUUIDFromBytes(item.docId.toByteArray()).toString()
-        assertTrue(document.metadata.isNotEmpty())
-        assertEquals(document.id.key, id)
+        assertTrue(document.fields.isNotEmpty())
+        assertEquals(id, document.id)
         assertEquals(document[SimpleDocument::title.name].value, item.title)
         assertEquals(document[SimpleDocument::author.name].value, item.author)
         assertEquals(document[SimpleDocument::modified.name].value, item.modified)
+    }
+
+    @Test
+    fun getDocuments_mapSingleItemWithExcludedProperty_fieldIsNotPresent() {
+        val item = DocumentWithExcludedProperty("unique id", "TestItem", "Just me...", ZonedDateTime.now())
+        val mapper = GenericItemMapper(item::class)
+
+        val document = mapper.getDocuments(item).first()
+        val id = UUID.nameUUIDFromBytes(item.docId.toByteArray()).toString()
+        assertTrue(document.fields.isNotEmpty())
+        assertEquals(id, document.id)
+        assertEquals(document[DocumentWithExcludedProperty::title.name].value, item.title)
+        assertEquals(document[DocumentWithExcludedProperty::modified.name].value, item.modified)
+        assertThrows<NoSuchElementException> { document[DocumentWithExcludedProperty::child.name].value }
     }
 
     @Test
@@ -30,8 +45,8 @@ internal class GenericItemMapperTest {
         val mapper = GenericItemMapper(item::class)
 
         val document = mapper.getDocuments(item).first()
-        assertTrue(document.metadata.isNotEmpty())
-        assertNotNull(document.id.key)
+        assertTrue(document.fields.isNotEmpty())
+        assertNotNull(document.id)
         assertEquals(document[DocumentWithoutId::title.name].value, item.title)
         assertEquals(document[DocumentWithoutId::author.name].value, item.author)
         assertEquals(document[DocumentWithoutId::modified.name].value, item.modified)
@@ -44,8 +59,8 @@ internal class GenericItemMapperTest {
 
         val document = mapper.getDocuments(item).first()
         val id = UUID.nameUUIDFromBytes(item.docId.toByteArray()).toString()
-        assertTrue(document.metadata.isNotEmpty())
-        assertEquals(document.id.key, id)
+        assertTrue(document.fields.isNotEmpty())
+        assertEquals(document.id, id)
         assertEquals(document[DocumentWithCollection::title.name].value, item.title)
         assertEquals(document[DocumentWithCollection::contributors.name].value, item.contributors)
         assertEquals(document[DocumentWithCollection::modified.name].value, item.modified)
@@ -57,9 +72,9 @@ internal class GenericItemMapperTest {
         val mapper = GenericItemMapper(item::class)
 
         val document = mapper.getDocuments(item).first()
-        val id = UUID.nameUUIDFromBytes(item.docId.reduce { acc, s -> acc + s }.toByteArray()).toString()
-        assertTrue(document.metadata.isNotEmpty())
-        assertEquals(document.id.key, id)
+        val id = UUID.nameUUIDFromBytes(item.docId.toString().toByteArray()).toString()
+        assertTrue(document.fields.isNotEmpty())
+        assertEquals(id, document.id)
         assertEquals(document[DocumentWithCollection::title.name].value, item.title)
         assertEquals(document[DocumentWithCollection::contributors.name].value, item.contributors)
         assertEquals(document[DocumentWithCollection::modified.name].value, item.modified)
@@ -73,8 +88,8 @@ internal class GenericItemMapperTest {
 
         val document = mapper.getDocuments(item).first()
         val id = UUID.nameUUIDFromBytes(item.docId.toByteArray()).toString()
-        assertTrue(document.metadata.isNotEmpty())
-        assertEquals(document.id.key, id)
+        assertTrue(document.fields.isNotEmpty())
+        assertEquals(document.id, id)
         assertEquals(document[DocumentWithChildren::title.name].value, item.title)
         assertEquals(document[DocumentWithChildren::modified.name].value, item.modified)
 

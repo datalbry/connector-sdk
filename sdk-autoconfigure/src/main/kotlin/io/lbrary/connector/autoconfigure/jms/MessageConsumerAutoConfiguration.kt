@@ -1,6 +1,7 @@
 package io.lbrary.connector.autoconfigure.jms
 
-import io.lbrary.client.api.IndexClient
+import io.datalbry.alxndria.client.api.IndexClient
+import io.datalbry.precise.api.schema.document.Document
 import io.lbrary.connector.api.CrawlProcessor
 import io.lbrary.connector.api.DocumentEdge
 import io.lbrary.connector.sdk.consumer.AdditionMessageConsumer
@@ -8,7 +9,6 @@ import io.lbrary.connector.sdk.consumer.DeletionMessageConsumer
 import io.lbrary.connector.sdk.messaging.Channel
 import io.lbrary.connector.sdk.state.ConnectorDocumentState
 import io.lbrary.connector.sdk.state.NodeReference
-import io.lbrary.service.index.api.document.Document
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

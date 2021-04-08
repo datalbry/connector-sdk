@@ -29,10 +29,10 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
 
-    compileOnly(project(":connector:api"))
-    compileOnly(project(":connector:sdk"))
-    compileOnly(project(":platform:service:index:client:feign"))
+    compileOnly(project(":sdk-api"))
+    compileOnly(project(":sdk"))
 
+    compileOnly("io.datalbry.alxndria:client-feign:0.0.1")
     compileOnly("jakarta.jms:jakarta.jms-api:2.0.3")
     compileOnly("org.springframework:spring-jms")
     compileOnly("com.fasterxml.jackson.module:jackson-module-kotlin")

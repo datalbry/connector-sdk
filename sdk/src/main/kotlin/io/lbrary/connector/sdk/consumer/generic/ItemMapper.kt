@@ -1,7 +1,7 @@
 package io.lbrary.connector.sdk.consumer.generic
 
+import io.datalbry.precise.api.schema.document.Document
 import io.lbrary.connector.api.DocumentEdge
-import io.lbrary.service.index.api.document.Document
 
 /**
  * [ItemMapper]

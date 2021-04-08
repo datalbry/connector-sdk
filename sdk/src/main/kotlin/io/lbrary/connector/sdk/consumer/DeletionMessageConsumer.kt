@@ -1,10 +1,9 @@
 package io.lbrary.connector.sdk.consumer
 
-import io.lbrary.client.api.IndexClient
+import io.datalbry.alxndria.client.api.IndexClient
 import io.lbrary.connector.sdk.messaging.Channel
 import io.lbrary.connector.sdk.state.ConnectorDocumentState
 import io.lbrary.connector.sdk.state.NodeReference
-import io.lbrary.service.index.api.datasource.DatasourceId
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.jms.annotation.JmsListener
@@ -22,7 +21,7 @@ class DeletionMessageConsumer(
 
         try {
             state.getUnseenDocuments(node, lock).forEach {
-                index.deleteDocument(DatasourceId(datasourceKey), it)
+                index.deleteDocument(datasourceKey, it)
                 state.remove(node, it, lock)
             }
 

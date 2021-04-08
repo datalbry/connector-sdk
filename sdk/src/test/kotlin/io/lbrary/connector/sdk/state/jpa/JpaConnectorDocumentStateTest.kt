@@ -1,11 +1,11 @@
 package io.lbrary.connector.sdk.state.jpa
 
-import io.lbrary.connector.sdk.state.jpa.util.createDocumentIds
+import io.lbrary.connector.sdk.state.jpa.util.createDocumentStates
 import io.lbrary.connector.sdk.state.jpa.util.createNode
 import io.lbrary.connector.sdk.state.jpa.util.createNodes
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Disabled
-
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.slf4j.LoggerFactory
@@ -144,8 +144,8 @@ internal class JpaConnectorDocumentStateTest {
 
         val root = createNode()
 
-        val childrenFirstSync = createDocumentIds(firstStart, firstEnd)
-        val childrenSecondSync = createDocumentIds(secondStart, secondEnd)
+        val childrenFirstSync = createDocumentStates(firstStart, firstEnd)
+        val childrenSecondSync = createDocumentStates(secondStart, secondEnd)
 
         val sync2parent = createNode()
         val lockSync1 = jpaConnectorDocumentState.lock(root)
@@ -162,6 +162,56 @@ internal class JpaConnectorDocumentStateTest {
     }
 
     @Test
+    fun getChecksum_checksumIsEqualToTheProvidedChecksum() {
+        val start = 0
+        val end = 35
+
+        val documents = createDocumentStates(start, end)
+        val parent = createNode()
+
+        val lockSync1 = jpaConnectorDocumentState.lock(parent)
+        documents.forEach { jpaConnectorDocumentState.put(parent, it, lockSync1) }
+        jpaConnectorDocumentState.put(parent, parent, lockSync1)
+        jpaConnectorDocumentState.release(parent, lockSync1)
+
+        val lockSync2 = jpaConnectorDocumentState.lock(parent)
+        documents.forEach { assertEquals(it.checksum, jpaConnectorDocumentState.getChecksum(parent, it.id, lockSync2)) }
+        jpaConnectorDocumentState.release(parent, lockSync2)
+    }
+
+    @Test
+    fun getChecksum_changeChecksumInSubsequentSync_worksJustFine() {
+        val start = 0
+        val end = 5
+
+        val documents = createDocumentStates(start, end)
+        val parent = createNode()
+
+        val lockSync1 = jpaConnectorDocumentState.lock(parent)
+        documents.forEach { jpaConnectorDocumentState.put(parent, it, lockSync1) }
+        jpaConnectorDocumentState.put(parent, parent, lockSync1)
+        jpaConnectorDocumentState.release(parent, lockSync1)
+
+        val lockSync2 = jpaConnectorDocumentState.lock(parent)
+        documents.forEach {
+            assertEquals(it.checksum, jpaConnectorDocumentState.getChecksum(parent, it.id, lockSync2))
+        }
+        jpaConnectorDocumentState.release(parent, lockSync2)
+
+        val lockSync3 = jpaConnectorDocumentState.lock(parent)
+        val changedDocuments = documents.map { it.copy("${it.checksum}_CHANGED") }
+        changedDocuments.forEach { jpaConnectorDocumentState.put(parent, it, lockSync3) }
+        jpaConnectorDocumentState.put(parent, parent, lockSync3)
+        jpaConnectorDocumentState.release(parent, lockSync3)
+
+        val lockSync4 = jpaConnectorDocumentState.lock(parent)
+        changedDocuments.forEach {
+            assertEquals(it.checksum, jpaConnectorDocumentState.getChecksum(parent, it.id, lockSync4))
+        }
+        jpaConnectorDocumentState.release(parent, lockSync4)
+    }
+
+    @Test
     fun getUnseenDocument_withSubsequentSync_containsTheCorrectAmountOfUnseenDocs() {
         val firstStart = 0
         val firstEnd = 35
@@ -170,8 +220,8 @@ internal class JpaConnectorDocumentStateTest {
 
         val root = createNode()
 
-        val childrenFirstSync = createDocumentIds(firstStart, firstEnd)
-        val childrenSecondSync = createDocumentIds(secondStart, secondEnd)
+        val childrenFirstSync = createDocumentStates(firstStart, firstEnd)
+        val childrenSecondSync = createDocumentStates(secondStart, secondEnd)
 
         val lockSync1 = jpaConnectorDocumentState.lock(root)
         childrenFirstSync.forEach { jpaConnectorDocumentState.put(root, it, lockSync1) }

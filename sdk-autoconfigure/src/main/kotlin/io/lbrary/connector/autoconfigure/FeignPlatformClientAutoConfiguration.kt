@@ -1,9 +1,9 @@
 package io.lbrary.connector.autoconfigure
 
-import io.lbrary.client.api.DatasourceClient
-import io.lbrary.client.api.IndexClient
-import io.lbrary.client.api.PlatformClient
-import io.lbrary.client.feign.v1.FeignPlatformClient
+import io.datalbry.alxndria.client.api.DatasourceClient
+import io.datalbry.alxndria.client.api.IndexClient
+import io.datalbry.alxndria.client.api.PlatformClient
+import io.datalbry.alxndria.client.feign.v1.FeignPlatformClient
 import io.lbrary.connector.sdk.PlatformProperties
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -19,7 +19,7 @@ open class FeignPlatformClientAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(PlatformClient::class)
     open fun feignPlatformClient(properties: PlatformProperties): FeignPlatformClient {
-        return FeignPlatformClient.createDefault(properties.uri.toString())
+        return FeignPlatformClient(properties.uri.toString())
     }
 
     @Bean

@@ -1,7 +1,5 @@
 package io.lbrary.connector.sdk.state
 
-import io.lbrary.service.index.api.document.DocumentId
-
 interface ConnectorDocumentState {
 
     @Throws(LockException::class)
@@ -11,13 +9,16 @@ interface ConnectorDocumentState {
     fun put(parent: NodeReference, child: NodeReference, lock: Lock)
 
     @Throws(LockException::class)
-    fun put(parent: NodeReference, child: DocumentId, lock: Lock)
+    fun put(parent: NodeReference, doc: DocumentState, lock: Lock)
 
     @Throws(LockException::class)
     fun remove(parent: NodeReference, child: NodeReference, lock: Lock)
 
     @Throws(LockException::class)
-    fun remove(parent: NodeReference, child: DocumentId, lock: Lock)
+    fun remove(parent: NodeReference, docId: String, lock: Lock)
+
+    @Throws(LockException::class)
+    fun getChecksum(parent: NodeReference, docId: String, lock: Lock): String
 
     @Throws(LockException::class)
     fun remove(node: NodeReference, lock: Lock)
@@ -26,7 +27,7 @@ interface ConnectorDocumentState {
     fun getUnseenNodes(node: NodeReference, lock: Lock): Collection<NodeReference>
 
     @Throws(LockException::class)
-    fun getUnseenDocuments(node: NodeReference, lock: Lock): Collection<DocumentId>
+    fun getUnseenDocuments(node: NodeReference, lock: Lock): Collection<String>
 
     @Throws(LockException::class)
     fun release(node: NodeReference, lock: Lock)

@@ -1,13 +1,12 @@
 package io.lbrary.connector.sdk.consumer.generic
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import io.datalbry.precise.api.schema.document.Document
 import io.lbrary.connector.api.CrawlProcessor
 import io.lbrary.connector.api.DocumentEdge
 import io.lbrary.connector.api.DocumentNode
 import io.lbrary.connector.api.Node
 import io.lbrary.connector.api.document.DocumentProcessor
-import io.lbrary.service.index.api.document.Document
-import java.util.*
 
 /**
  * The [GenericCrawlProcessor] is the main entry point for the high level layer of the Connector SDK.

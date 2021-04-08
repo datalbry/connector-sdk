@@ -21,4 +21,7 @@ interface DocumentRepository: Repository<DocumentRelationshipEntity, DocumentRel
     @Lock(LockModeType.PESSIMISTIC_READ)
     fun findAllByNodeAndRevisionIsNot(node: UUID, revision: UUID): Collection<DocumentRelationshipEntity>
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    fun getByNodeAndDocumentKey(node: UUID, documentKey: String): DocumentRelationshipEntity
+
 }

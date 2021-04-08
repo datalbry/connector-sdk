@@ -1,8 +1,7 @@
 package io.lbrary.connector.sdk.state.jpa.util
 
+import io.lbrary.connector.sdk.state.DocumentState
 import io.lbrary.connector.sdk.state.NodeReference
-import io.lbrary.service.index.api.document.DocumentId
-import io.lbrary.service.index.api.schema.DocumentSchemaId
 import java.util.*
 import java.util.stream.IntStream
 import kotlin.streams.toList
@@ -15,10 +14,7 @@ import kotlin.streams.toList
  *
  * @return collection of deterministic NodeReferences
  */
-internal fun createNodes(
-    start: Int,
-    end: Int
-): Collection<NodeReference> {
+internal fun createNodes(start: Int, end: Int): Collection<NodeReference> {
     return IntStream
         .range(start, end)
         .mapToObj { UUID.nameUUIDFromBytes("test_$it".toByteArray()) }
@@ -33,9 +29,7 @@ internal fun createNodes(
  *
  * @return newly created [NodeReference]
  */
-internal fun createNode(
-    uuid: UUID = UUID.randomUUID()
-): NodeReference {
+internal fun createNode(uuid: UUID = UUID.randomUUID()): NodeReference {
     return NodeReference(uuid)
 }
 
@@ -44,18 +38,13 @@ internal fun createNode(
  *
  * @param start index
  * @param end index
- * @param schemaId for the [DocumentId], defaults to a static one
  *
  * @return collection of deterministic DocumentIds
  */
-internal fun createDocumentIds(
-    start: Int,
-    end: Int,
-    schemaId: DocumentSchemaId = DocumentSchemaId("test")
-) : Collection<DocumentId> {
+internal fun createDocumentStates(start: Int, end: Int) : Collection<DocumentState> {
     return IntStream
         .range(start, end)
-        .mapToObj { UUID.nameUUIDFromBytes("doc_$it".toByteArray())}
-        .map { DocumentId(it.toString(), schemaId) }
+        .mapToObj { UUID.nameUUIDFromBytes("doc_$it".toByteArray()) to it}
+        .map { DocumentState(it.first.toString(), it.second.toString()) }
         .toList()
 }

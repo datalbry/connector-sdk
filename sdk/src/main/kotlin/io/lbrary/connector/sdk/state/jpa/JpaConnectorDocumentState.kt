@@ -1,14 +1,9 @@
 package io.lbrary.connector.sdk.state.jpa
 
-import io.lbrary.connector.sdk.state.ConnectorDocumentState
-import io.lbrary.connector.sdk.state.Lock
-import io.lbrary.connector.sdk.state.LockException
-import io.lbrary.connector.sdk.state.NodeReference
+import io.lbrary.connector.sdk.state.*
 import io.lbrary.connector.sdk.state.jpa.entity.DocumentRelationshipEntity
 import io.lbrary.connector.sdk.state.jpa.entity.LockEntity
 import io.lbrary.connector.sdk.state.jpa.entity.NodeRelationshipEntity
-import io.lbrary.service.index.api.document.DocumentId
-import io.lbrary.service.index.api.schema.DocumentSchemaId
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
@@ -48,21 +43,21 @@ open class JpaConnectorDocumentState(
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    override fun put(parent: NodeReference, child: DocumentId, lock: Lock) {
+    override fun put(parent: NodeReference, doc: DocumentState, lock: Lock) {
         runIfLocked(parent, lock) {
             val entity = DocumentRelationshipEntity(
                 node = parent.uuid,
-                documentKey = child.key,
-                documentSchema = child.type.key,
+                documentKey = doc.id,
+                documentChecksum = doc.checksum,
                 revision = lock.uuid)
             documentRepository.save(entity)
         }
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    override fun remove(parent: NodeReference, child: DocumentId, lock: Lock) {
+    override fun remove(parent: NodeReference, docId: String, lock: Lock) {
         runIfLocked(parent, lock) {
-            documentRepository.removeByNodeAndDocumentKey(parent.uuid, child.key)
+            documentRepository.removeByNodeAndDocumentKey(parent.uuid, docId)
         }
     }
 
@@ -82,6 +77,13 @@ open class JpaConnectorDocumentState(
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
+    override fun getChecksum(parent: NodeReference, docId: String, lock: Lock): String {
+        return runIfLocked(parent, lock) {
+            documentRepository.getByNodeAndDocumentKey(parent.uuid, docId).documentChecksum
+        }
+    }
+
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     override fun getUnseenNodes(node: NodeReference, lock: Lock): Collection<NodeReference> {
         return runIfLocked(node, lock) {
             jobRepository
@@ -91,11 +93,11 @@ open class JpaConnectorDocumentState(
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    override fun getUnseenDocuments(node: NodeReference, lock: Lock): Collection<DocumentId> {
+    override fun getUnseenDocuments(node: NodeReference, lock: Lock): Collection<String> {
         return runIfLocked(node, lock) {
             documentRepository
                 .findAllByNodeAndRevisionIsNot(node.uuid, lock.uuid)
-                .map { DocumentId(it.documentKey, DocumentSchemaId(it.documentSchema)) }
+                .map { it.documentKey }
         }
     }
 

@@ -1,8 +1,8 @@
 package io.lbrary.connector.api.document
 
+import io.datalbry.precise.api.schema.document.Document
 import io.lbrary.connector.api.CrawlProcessor
 import io.lbrary.connector.api.DocumentEdge
-import io.lbrary.service.index.api.document.Document
 
 /**
  * Low-Level [DocumentCrawlProcessor] is the main entry class for the connector-sdk.

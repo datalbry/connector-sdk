@@ -31,7 +31,8 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
 
-    api(project(":platform:service:index:api"))
+    api("io.datalbry.config-schema:api:0.0.1")
+    api("io.datalbry.precise:api:0.0.4")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

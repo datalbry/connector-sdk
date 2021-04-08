@@ -12,7 +12,7 @@ import javax.persistence.IdClass
 data class DocumentRelationshipEntity(
     @Id val node: UUID,
     @Id val documentKey: String,
-    @Id val documentSchema: String,
+    val documentChecksum: String,
     val revision: UUID
 )
 
@@ -20,5 +20,4 @@ data class DocumentRelationshipEntity(
 data class DocumentRelationshipEntityId(
     val node: UUID,
     val documentKey: String,
-    val documentSchema: String,
 ): Serializable

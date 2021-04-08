@@ -1,19 +1,17 @@
 package io.lbrary.connector.sdk.consumer
 
-import io.lbrary.client.api.IndexClient
+import io.datalbry.alxndria.client.api.IndexClient
+import io.datalbry.precise.api.schema.document.Document
 import io.lbrary.connector.api.CrawlProcessor
 import io.lbrary.connector.api.DocumentEdge
+import io.lbrary.connector.sdk.extension.toDocumentState
 import io.lbrary.connector.sdk.messaging.Channel
 import io.lbrary.connector.sdk.state.ConnectorDocumentState
+import io.lbrary.connector.sdk.state.Lock
 import io.lbrary.connector.sdk.state.NodeReference
-import io.lbrary.service.index.api.datasource.DatasourceId
-import io.lbrary.service.index.api.document.Document
-import io.lbrary.service.index.api.validation.ErrorLevel
-import io.lbrary.service.index.api.validation.ValidationError
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.jms.annotation.JmsListener
-import java.util.*
 
 /**
  * The [AdditionMessageConsumer] contains the logic on how to consume JMS messages (in form of [DocumentEdge])
@@ -37,8 +35,8 @@ import java.util.*
  *
  * @param index client which is being used to put documents into the index
  * @param processor to process the [DocumentEdge]s with and to get the resulting [Document]s from
- * @param deletions channel to put the deletion ([DocumentEdge] / [NodeReference]) candidates to
- * @param additions channel to put the [DocumentEdge] to
+ * @param deletionChannel channel to put the deletion ([DocumentEdge] / [NodeReference]) candidates to
+ * @param addChannel channel to put the [DocumentEdge] to
  * @param state to persist the whole traversal with
  *
  * @author timo gruen - 2020-11-15
@@ -46,8 +44,8 @@ import java.util.*
 class AdditionMessageConsumer(
     private val index: IndexClient,
     private val processor: CrawlProcessor<DocumentEdge, Document>,
-    private val deletions: Channel<NodeReference>,
-    private val additions: Channel<DocumentEdge>,
+    private val deletionChannel: Channel<NodeReference>,
+    private val addChannel: Channel<DocumentEdge>,
     private val state: ConnectorDocumentState
 ) {
 
@@ -60,53 +58,52 @@ class AdditionMessageConsumer(
 
         try {
             log.trace("Start processing Edge[${edge.uuid}]")
-            val documentNode = processor.process(edge)
+            val item = processor.process(edge)
 
-            documentNode.objects.forEach {
-                log.trace("Processing Document[${it.id.type.key}][${it.id.key}]")
-                state.put(node, it.id, lock)
-                val validation = index.putDocument(DatasourceId(datasourceKey), it)
-                validation.forEach(this@AdditionMessageConsumer::logValidation)
+            item.objects.forEach {
+                log.trace("Processing Document[${it.type}][${it.id}]")
+                val hasChanged = hasChanged(node, it, lock)
+                state.put(node, it.toDocumentState(), lock)
+                if (hasChanged) index.putDocument(datasourceKey, it)
+                log.trace("Completed processing Document[${it.type}][${it.id}]")
             }
 
             state.getUnseenDocuments(node, lock).forEach {
-                log.trace("Deleting Document[${it.key}][${it.type.key}]")
-                index.deleteDocument(DatasourceId(datasourceKey), it)
+                log.trace("Deleting Document[${it}]")
+                index.deleteDocument(datasourceKey, it)
                 state.remove(node, it, lock)
+                log.trace("Completed deleting Document[$it]")
             }
 
-            documentNode.edges.forEach {
+            item.edges.forEach {
                 log.trace("Discovered Edge[${it.uuid}]")
                 state.put(node, NodeReference(it.uuid), lock)
-                additions.propagate(it)
+                addChannel.propagate(it)
             }
 
             state.getUnseenNodes(node, lock).forEach {
                 log.trace("Unseen Node[${it.uuid}]")
-                deletions.propagate(it)
+                deletionChannel.propagate(it)
                 state.remove(node, it, lock)
             }
-            state.release(node, lock)
-            log.trace("Successfully completed Edge[${edge.uuid}]")
         } catch (e: Throwable) {
             log.warn(
                 "Failed to process Node[${node.uuid}] due to an Exception[\"${e.message}\"]. " +
                         "Check trace for further information.")
             log.trace("", e)
-            state.release(node, lock)
             if (e is Error) throw e
+        } finally {
+            state.release(node, lock)
+            log.trace("Completed Edge[${edge.uuid}]")
         }
     }
 
-    private fun logValidation(v: ValidationError) {
-        when (v.level) {
-            ErrorLevel.INFO -> log.info(v.message)
-            ErrorLevel.WARN -> log.warn(v.message)
-            ErrorLevel.FATAL -> log.warn(v.message)
-        }
-    }
+    private fun hasChanged(node: NodeReference, doc: Document, lock: Lock) =
+        state.getChecksum(node, doc.id, lock) != doc[CHECKSUM_FIELD].value
+
 
     companion object {
+        const val CHECKSUM_FIELD = "_checksum"
         private val log = LoggerFactory.getLogger(AdditionMessageConsumer::class.java)
     }
 }

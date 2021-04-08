@@ -12,4 +12,4 @@ package io.lbrary.connector.api.annotation.stereotype
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 @Item(indexed = true)
-annotation class Document(val name: String = "")
+annotation class Document

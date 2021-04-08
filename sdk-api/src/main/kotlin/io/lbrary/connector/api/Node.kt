@@ -1,6 +1,6 @@
 package io.lbrary.connector.api
 
-import io.lbrary.service.index.api.document.Document
+import io.datalbry.precise.api.schema.document.Document
 import java.util.*
 
 /**
