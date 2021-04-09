@@ -10,5 +10,5 @@ class DocumentWithIdCollection(
     @Id val docId: Collection<String>,
     val title: String,
     val contributors: Collection<String>,
-    @Checksum val modified: ZonedDateTime
+    @Checksum val modified: String
 )

@@ -11,5 +11,5 @@ class DocumentWithExcludedProperty(
     @Id val docId: String,
     val title: String,
     @Exclude val child: String,
-    @Checksum val modified: ZonedDateTime
+    @Checksum val modified: String
 )

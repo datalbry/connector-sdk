@@ -8,5 +8,5 @@ import java.time.ZonedDateTime
 class DocumentWithoutId(
     val title: String,
     val author: String,
-    @Checksum val modified: ZonedDateTime
+    @Checksum val modified: String
 )

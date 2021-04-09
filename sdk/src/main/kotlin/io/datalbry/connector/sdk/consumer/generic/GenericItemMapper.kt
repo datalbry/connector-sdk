@@ -11,6 +11,9 @@ import io.datalbry.connector.api.DocumentEdge
 import io.datalbry.connector.api.annotation.property.Checksum
 import io.datalbry.connector.sdk.consumer.AdditionMessageConsumer.Companion.CHECKSUM_FIELD
 import io.datalbry.connector.sdk.consumer.generic.GenericCrawlProcessor.Companion.TYPE_KEY
+import io.datalbry.connector.sdk.util.annotatedWith
+import io.datalbry.connector.sdk.util.isBasicFieldType
+import io.datalbry.precise.api.schema.document.generic.GenericRecord
 import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
@@ -31,6 +34,9 @@ import io.datalbry.connector.api.annotation.stereotype.Document as DocumentAnnot
 class GenericItemMapper(private val clazz: KClass<*>): ItemMapper<Any> {
     private val getter = clazz.declaredMemberProperties
     private val jackson = jacksonObjectMapper()
+    private val recordMapper = AnyToRecordMapper()
+
+    // returnType = Collection<*> != Collection<String>
 
     override fun getDocuments(item: Any): Collection<Document> {
         assert(supports(item)) { "${this.clazz.simpleName} does not support [${item.javaClass}]." }
@@ -38,11 +44,10 @@ class GenericItemMapper(private val clazz: KClass<*>): ItemMapper<Any> {
         if (clazz.annotations.none(DocumentAnnotation::class::isInstance)) return emptyList()
 
         val id = getId(item)
-        val type = getType()
-        val metadata = getMetadata(item)
         val checksum = getChecksum(item)
+        val record = recordMapper.getRecord(item)
 
-        val document = GenericDocument(type, id, metadata + checksum)
+        val document = GenericDocument(record.type, id, record.fields + checksum)
 
         return listOf(document)
     }
@@ -50,7 +55,7 @@ class GenericItemMapper(private val clazz: KClass<*>): ItemMapper<Any> {
     private fun getChecksum(item: Any): Field<String> {
         val checksum = getter
             .asSequence()
-            .filter { annotatedWith<Checksum>(it) }
+            .filter { it.annotatedWith<Checksum>() }
             .map { it.name to it.javaGetter!!.invoke(item) }
             .map { it.toString() }
             .sorted()
@@ -61,7 +66,7 @@ class GenericItemMapper(private val clazz: KClass<*>): ItemMapper<Any> {
     override fun getEdges(item: Any): Collection<DocumentEdge> {
         return getter
                 .asSequence()
-                .filter { annotatedWith<ChildrenAnnotation>(it) }
+                .filter { it.annotatedWith<ChildrenAnnotation>() }
                 .map { it.javaGetter!!.invoke(item) }
                 .map { toCollection(it) }
                 .flatten()
@@ -75,14 +80,10 @@ class GenericItemMapper(private val clazz: KClass<*>): ItemMapper<Any> {
         return clazz.isInstance(item)
     }
 
-    private fun getType(): String {
-        return clazz.simpleName.toString()
-    }
-
     private fun getId(item: Any): String {
         val idString = getter
             .asSequence()
-            .filter { annotatedWith<IdAnnotation>(it) }
+            .filter { it.annotatedWith<IdAnnotation>() }
             .map { it.javaGetter!!.invoke(item) }
             .map { it.toString() }
             .ifEmpty { sequenceOf(UUID.randomUUID().toString()) }
@@ -95,7 +96,7 @@ class GenericItemMapper(private val clazz: KClass<*>): ItemMapper<Any> {
     private fun getEdgeIdentifier(edge: Any): UUID {
         val idString = edge::class.declaredMemberProperties
             .asSequence()
-            .filter { annotatedWith<IdAnnotation>(it) }
+            .filter { it.annotatedWith<IdAnnotation>() }
             .map { it.javaGetter!!.invoke(edge) }
             .map { it.toString() }
             .ifEmpty { sequenceOf(UUID.randomUUID().toString()) }
@@ -104,17 +105,7 @@ class GenericItemMapper(private val clazz: KClass<*>): ItemMapper<Any> {
         return UUID.nameUUIDFromBytes(idString.toByteArray())
     }
 
-    private fun getMetadata(item: Any): Set<Field<*>> {
-        return getter
-            .asSequence()
-            .filterNot { annotatedWith<Exclude>(it) }
-            .map { it.name to it.javaGetter!!.invoke(item) }
-            .map { GenericField(it.first, it.second) }
-            .toSet()
-    }
 
-    private inline fun <reified ANNOTATION> annotatedWith(property: KProperty1<out Any, *>) =
-        property.annotations.any { a -> ANNOTATION::class.java.isInstance(a) }
 }
 
 private fun toCollection(it: Any?) = if (it is Collection<*>) it else listOf(it)

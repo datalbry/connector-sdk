@@ -14,7 +14,7 @@ internal class GenericItemMapperTest {
 
     @Test
     fun getDocuments_mapSingleItem_workJustFine() {
-        val item = SimpleDocument("unique id", "TestItem", "Just me...", ZonedDateTime.now())
+        val item = SimpleDocument("unique id", "TestItem", "Just me...", ZonedDateTime.now().toString())
         val mapper = GenericItemMapper(item::class)
 
         val document = mapper.getDocuments(item).first()
@@ -28,7 +28,7 @@ internal class GenericItemMapperTest {
 
     @Test
     fun getDocuments_mapSingleItemWithExcludedProperty_fieldIsNotPresent() {
-        val item = DocumentWithExcludedProperty("unique id", "TestItem", "Just me...", ZonedDateTime.now())
+        val item = DocumentWithExcludedProperty("unique id", "TestItem", "Just me...", ZonedDateTime.now().toString())
         val mapper = GenericItemMapper(item::class)
 
         val document = mapper.getDocuments(item).first()
@@ -42,7 +42,7 @@ internal class GenericItemMapperTest {
 
     @Test
     fun getDocuments_withoutIdAddsSyntheticId_workJustFine() {
-        val item = DocumentWithoutId("TestItem", "Just me...", ZonedDateTime.now())
+        val item = DocumentWithoutId("TestItem", "Just me...", ZonedDateTime.now().toString())
         val mapper = GenericItemMapper(item::class)
 
         val document = mapper.getDocuments(item).first()
@@ -55,7 +55,7 @@ internal class GenericItemMapperTest {
 
     @Test
     fun getDocuments_documentContainsCollection_workJustFine() {
-        val item = DocumentWithCollection("another unique id", "Collection Item", listOf(""), ZonedDateTime.now())
+        val item = DocumentWithCollection("another unique id", "Collection Item", listOf(""), ZonedDateTime.now().toString())
         val mapper = GenericItemMapper(item::class)
 
         val document = mapper.getDocuments(item).first()
@@ -69,7 +69,7 @@ internal class GenericItemMapperTest {
 
     @Test
     fun getDocuments_containingCollectionOfIds_gettingReducedCorrectly() {
-        val item = DocumentWithIdCollection(listOf("id1", "id2"), "Collection Item", listOf(""), ZonedDateTime.now())
+        val item = DocumentWithIdCollection(listOf("id1", "id2"), "Collection Item", listOf(""), ZonedDateTime.now().toString())
         val mapper = GenericItemMapper(item::class)
 
         val document = mapper.getDocuments(item).first()
@@ -84,7 +84,7 @@ internal class GenericItemMapperTest {
     @Test
     fun getDocuments_children_haveNoEffectOnGetDocumentsChildren() {
         val childrenInput = listOf(Child("google", URI.create("http://google.com")))
-        val item = DocumentWithChildren("id", "Collection Item", ZonedDateTime.now(), childrenInput)
+        val item = DocumentWithChildren("id", "Collection Item", ZonedDateTime.now().toString(), childrenInput)
         val mapper = GenericItemMapper(item::class)
 
         val document = mapper.getDocuments(item).first()
@@ -101,7 +101,7 @@ internal class GenericItemMapperTest {
 
     @Test
     fun getDocuments_deconstructingComplexFields_areMappedToRecords() {
-        val item = DocumentWithComplexProperty("id", "Collection Item", Person("test", "test@example.org") ,ZonedDateTime.now())
+        val item = DocumentWithComplexProperty("id", "Collection Item", Person("test", "test@example.org") ,ZonedDateTime.now().toString())
         val mapper = GenericItemMapper(item::class)
 
         val document = mapper.getDocuments(item).first()

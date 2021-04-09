@@ -10,5 +10,5 @@ class SimpleDocument(
     @Id val docId: String,
     val title: String,
     val author: String,
-    @Checksum val modified: ZonedDateTime
+    @Checksum val modified: String
 )
