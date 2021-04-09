@@ -7,4 +7,4 @@ plugins {
 
 extra["springCloudVersion"] = "Hoxton.SR6"
 
-version = "0.0.3"
+version = "0.0.4"

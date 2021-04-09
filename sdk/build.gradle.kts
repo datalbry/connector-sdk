@@ -45,7 +45,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
 
-    implementation(project(":sdk-api"))
+    api(project(":sdk-api"))
     implementation("io.datalbry.alxndria:client-feign:0.0.2")
 
     api("org.springframework.boot:spring-boot-starter-web")
