@@ -1,9 +1,9 @@
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
-    kotlin("jvm")
+    id("datalbry.kotlin")
+    id("datalbry.publish-maven-central")
     kotlin("kapt")
-    id("java-library")
     id("org.springframework.boot")
     id("io.spring.dependency-management")
 }

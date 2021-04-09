@@ -1,8 +1,8 @@
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
-    kotlin("jvm")
-    id("java-library")
+    id("datalbry.kotlin")
+    id("datalbry.publish-maven-central")
     id("org.springframework.boot")
     id("io.spring.dependency-management")
     id("org.jetbrains.kotlin.plugin.allopen")

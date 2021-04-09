@@ -1,5 +1,7 @@
 rootProject.name = "connector-sdk"
 
+includeBuild("gradle/convention")
+
 include(
         "sdk",
         "sdk-api",
