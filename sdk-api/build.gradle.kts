@@ -11,9 +11,6 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-// Set API version to parents major version
-version = project.parent!!.version.toString().split(".")[0]
-
 // ===========================================================================================
 // The org.springframework.boot plugin enables the bootJar task which builds an executable jar
 // Instead the Platform is a library module which relies on spring boot
