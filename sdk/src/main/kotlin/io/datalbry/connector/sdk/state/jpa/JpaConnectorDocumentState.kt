@@ -79,7 +79,7 @@ open class JpaConnectorDocumentState(
     @Transactional(isolation = Isolation.READ_COMMITTED)
     override fun getChecksum(parent: NodeReference, docId: String, lock: Lock): String {
         return runIfLocked(parent, lock) {
-            documentRepository.getByNodeAndDocumentKey(parent.uuid, docId).documentChecksum
+            documentRepository.getByNodeAndDocumentKey(parent.uuid, docId)?.documentChecksum ?: ""
         }
     }
 

@@ -98,9 +98,10 @@ class AdditionMessageConsumer(
         }
     }
 
-    private fun hasChanged(node: NodeReference, doc: Document, lock: Lock) =
-        state.getChecksum(node, doc.id, lock) != doc[CHECKSUM_FIELD].value
-
+    private fun hasChanged(node: NodeReference, doc: Document, lock: Lock): Boolean {
+        val checksum = state.getChecksum(node, doc.id, lock)
+        return checksum.isNotEmpty() && checksum != doc[CHECKSUM_FIELD].value
+    }
 
     companion object {
         const val CHECKSUM_FIELD = "_checksum"
