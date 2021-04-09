@@ -1,6 +1,7 @@
 package io.datalbry.connector.sdk.consumer.generic
 
 import io.datalbry.connector.sdk.consumer.generic.documents.*
+import io.datalbry.precise.api.schema.document.Record
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -96,6 +97,26 @@ internal class GenericItemMapperTest {
         val children = mapper.getEdges(item)
         val sourceEdges = childrenInput.map(Child::toEdge)
         assertTrue(children.containsAll(sourceEdges))
+    }
+
+    @Test
+    fun getDocuments_deconstructingComplexFields_areMappedToRecords() {
+        val item = DocumentWithComplexProperty("id", "Collection Item", Person("test", "test@example.org") ,ZonedDateTime.now())
+        val mapper = GenericItemMapper(item::class)
+
+        val document = mapper.getDocuments(item).first()
+        val id = UUID.nameUUIDFromBytes(item.docId.toByteArray()).toString()
+        assertTrue(document.fields.isNotEmpty())
+        assertEquals(document.id, id)
+        assertEquals(document[DocumentWithComplexProperty::title.name].value, item.title)
+        assertEquals(document[DocumentWithComplexProperty::modified.name].value, item.modified)
+        val author = document[DocumentWithComplexProperty::author.name].value
+        assertTrue(author is Record)
+        if (author is Record) {
+            assertEquals(author[Person::mail.name].value, item.author.mail)
+            assertEquals(author[Person::name.name].value, item.author.name)
+        }
+
     }
 
     @Test

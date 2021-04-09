@@ -9,7 +9,7 @@ subprojects {
         mavenCentral()
     }
 
-    val finalizePublishTask = tasks.create("FinalizePublish") {
+    val finalizePublishTask = tasks.create("finalizePublish") {
         releaseLock()
     }
 
