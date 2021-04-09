@@ -9,8 +9,12 @@ subprojects {
         mavenCentral()
     }
 
+    val finalizePublishTask = tasks.create("FinalizePublish") {
+        releaseLock()
+    }
+
     project.tasks.withType(PublishToMavenRepository::class) {
         doFirst { acquireLock() }
-        doLast { releaseLock() }
+        this.finalizedBy(finalizePublishTask)
     }
 }

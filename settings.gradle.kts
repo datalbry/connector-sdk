@@ -5,8 +5,7 @@ includeBuild("gradle/convention")
 include(
         "sdk",
         "sdk-api",
-        "sdk-autoconfigure",
-        "sdk-starter"
+        "sdk-autoconfigure"
 )
 
 pluginManagement {
