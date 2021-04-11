@@ -21,6 +21,7 @@ configure<PublishingExtension> {
         }
         create<MavenPublication>("jar") {
             from(components["java"])
+            artifactId = "connector-${project.name}"
             versionMapping {
                 usage("java-api") {
                     fromResolutionOf("runtimeClasspath")

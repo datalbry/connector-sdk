@@ -36,8 +36,6 @@ class GenericItemMapper(private val clazz: KClass<*>): ItemMapper<Any> {
     private val jackson = jacksonObjectMapper()
     private val recordMapper = AnyToRecordMapper()
 
-    // returnType = Collection<*> != Collection<String>
-
     override fun getDocuments(item: Any): Collection<Document> {
         assert(supports(item)) { "${this.clazz.simpleName} does not support [${item.javaClass}]." }
 

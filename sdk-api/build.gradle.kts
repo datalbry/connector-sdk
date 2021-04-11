@@ -28,8 +28,8 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
 
-    api("io.datalbry.config-schema:api:0.0.1")
-    api("io.datalbry.precise:api:0.0.4")
+    api("io.datalbry.commons:commons-config-api:0.0.1")
+    api("io.datalbry.precise:precise-api:0.0.4")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
