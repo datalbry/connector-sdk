@@ -35,12 +35,6 @@ tasks.getByName("jacocoTestReport") {
     enabled = false
 }
 
-// Prefix all of our jars with the company name
-tasks.withType<AbstractArchiveTask> {
-    archiveBaseName.set("datalbry-${getArchiveName(this.project)}")
-    archiveVersion.set(this.project.version.toString())
-}
-
 // We are using Kotlin, so wdk about the Java Version onwards, as we are not relying on Java 11+ features
 tasks.withType<JavaCompile> {
     sourceCompatibility = "1.8"
@@ -68,16 +62,4 @@ fun getVersion(project: Project): String {
     return version
 }
 
-
-//Function to calculate unique archive names,
-//since we are not prefixing all of our submodules with the parent hierarchy.
-fun getArchiveName(project: Project): String {
-    var archiveName = project.name
-    var parent = project.parent
-    while (parent != null) {
-        archiveName = "${parent!!.name}-${archiveName}"
-        parent = parent!!.parent
-    }
-    return archiveName
-}
 

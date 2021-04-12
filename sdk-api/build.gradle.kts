@@ -29,7 +29,7 @@ dependencies {
     implementation(kotlin("reflect"))
 
     api("io.datalbry.commons:commons-config-api:0.0.1")
-    api("io.datalbry.precise:precise-api:0.0.4")
+    api("io.datalbry.precise:precise-api:0.0.5")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

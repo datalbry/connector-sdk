@@ -4,11 +4,13 @@ import io.datalbry.alxndria.client.api.IndexClient
 import io.datalbry.precise.api.schema.document.Document
 import io.datalbry.connector.api.CrawlProcessor
 import io.datalbry.connector.api.DocumentEdge
+import io.datalbry.connector.sdk.consumer.AdditionMessageConsumer.Companion.CHECKSUM_FIELD
 import io.datalbry.connector.sdk.extension.toDocumentState
 import io.datalbry.connector.sdk.messaging.Channel
 import io.datalbry.connector.sdk.state.ConnectorDocumentState
 import io.datalbry.connector.sdk.state.Lock
 import io.datalbry.connector.sdk.state.NodeReference
+import io.datalbry.precise.api.schema.document.generic.GenericDocument
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.jms.annotation.JmsListener
@@ -64,7 +66,7 @@ class AdditionMessageConsumer(
                 log.trace("Processing Document[${it.type}][${it.id}]")
                 val hasChanged = hasChanged(node, it, lock)
                 state.put(node, it.toDocumentState(), lock)
-                if (hasChanged) index.putDocument(datasourceKey, it)
+                if (hasChanged) index.putDocument(datasourceKey, it.removeChecksum())
                 log.trace("Completed processing Document[${it.type}][${it.id}]")
             }
 
@@ -100,11 +102,19 @@ class AdditionMessageConsumer(
 
     private fun hasChanged(node: NodeReference, doc: Document, lock: Lock): Boolean {
         val checksum = state.getChecksum(node, doc.id, lock)
-        return checksum.isNotEmpty() && checksum != doc[CHECKSUM_FIELD].value
+        return checksum.isEmpty() || checksum != doc[CHECKSUM_FIELD].value
     }
 
     companion object {
         const val CHECKSUM_FIELD = "_checksum"
         private val log = LoggerFactory.getLogger(AdditionMessageConsumer::class.java)
     }
+}
+
+private fun Document.removeChecksum(): Document {
+    val id = this.id
+    val type = this.type
+    val fields = this.fields.toMutableSet()
+    fields.removeIf { it.name == CHECKSUM_FIELD }
+    return GenericDocument(type, id, fields)
 }
