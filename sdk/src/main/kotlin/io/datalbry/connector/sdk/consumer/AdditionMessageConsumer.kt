@@ -7,6 +7,8 @@ import io.datalbry.connector.api.DocumentEdge
 import io.datalbry.connector.sdk.consumer.AdditionMessageConsumer.Companion.CHECKSUM_FIELD
 import io.datalbry.connector.sdk.extension.toDocumentState
 import io.datalbry.connector.sdk.messaging.Channel
+import io.datalbry.connector.sdk.properties.ConnectorSDKProperties.Companion.CONCURRENCY_PROPERTY
+import io.datalbry.connector.sdk.properties.ConnectorSDKProperties.Companion.DATASOURCE_PROPERTY
 import io.datalbry.connector.sdk.state.ConnectorDocumentState
 import io.datalbry.connector.sdk.state.Lock
 import io.datalbry.connector.sdk.state.NodeReference
@@ -51,9 +53,9 @@ class AdditionMessageConsumer(
     private val state: ConnectorDocumentState
 ) {
 
-    @Value("\${io.datalbry.datasource.key}") lateinit var datasourceKey: String
+    @Value("\${$DATASOURCE_PROPERTY}") lateinit var datasourceKey: String
 
-    @JmsListener(destination = "\${io.datalbry.datasource.key}-${Channel.DESTINATION_NODE_ADDITION}", concurrency = "1")
+    @JmsListener(destination = "\${$DATASOURCE_PROPERTY}-${Channel.DESTINATION_NODE_ADDITION}", concurrency = "\${$CONCURRENCY_PROPERTY:1}")
     fun consume(edge: DocumentEdge) {
         val node = NodeReference(edge.uuid)
         val lock = state.lock(node)

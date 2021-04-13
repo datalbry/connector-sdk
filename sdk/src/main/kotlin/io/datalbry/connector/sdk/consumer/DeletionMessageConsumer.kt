@@ -4,6 +4,7 @@ import io.datalbry.alxndria.client.api.IndexClient
 import io.datalbry.connector.api.CrawlProcessor
 import io.datalbry.connector.api.DocumentEdge
 import io.datalbry.connector.sdk.messaging.Channel
+import io.datalbry.connector.sdk.properties.ConnectorSDKProperties.Companion.DATASOURCE_PROPERTY
 import io.datalbry.connector.sdk.state.ConnectorDocumentState
 import io.datalbry.connector.sdk.state.NodeReference
 import io.datalbry.precise.api.schema.document.Document
@@ -28,9 +29,9 @@ class DeletionMessageConsumer(
     private val channel: Channel<NodeReference>,
     private val state: ConnectorDocumentState
 ) {
-    @Value("\${io.datalbry.datasource.key}") lateinit var datasourceKey: String
+    @Value("\${$DATASOURCE_PROPERTY}") lateinit var datasourceKey: String
 
-    @JmsListener(destination = "\${io.datalbry.datasource.key}-${Channel.DESTINATION_NODE_DELETION}")
+    @JmsListener(destination = "\${$DATASOURCE_PROPERTY}-${Channel.DESTINATION_NODE_DELETION}")
     fun consume(node: NodeReference) {
         val lock = state.lock(node)
 
