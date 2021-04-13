@@ -1,6 +1,8 @@
 package io.datalbry.connector.sdk.messaging.jms
 
 import io.datalbry.connector.sdk.messaging.Channel
+import io.datalbry.connector.sdk.properties.ConnectorSDKProperties
+import io.datalbry.connector.sdk.properties.ConnectorSDKProperties.Companion.DATASOURCE_PROPERTY
 import io.datalbry.connector.sdk.state.NodeReference
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.jms.core.JmsTemplate
@@ -9,7 +11,7 @@ class JmsDeletionChannel(
         private val jmsTemplate: JmsTemplate
 ): Channel<NodeReference> {
 
-    @Value("io.lbrary.datasource.key") lateinit var datasourceKey: String
+    @Value("\${$DATASOURCE_PROPERTY}") lateinit var datasourceKey: String
 
     override fun propagate(message: NodeReference) {
         jmsTemplate.convertAndSend(

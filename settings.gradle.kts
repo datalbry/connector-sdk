@@ -1,3 +1,5 @@
+enableFeaturePreview("VERSION_CATALOGS")
+
 rootProject.name = "connector-sdk"
 
 includeBuild("gradle/convention")
@@ -5,7 +7,8 @@ includeBuild("gradle/convention")
 include(
         "sdk",
         "sdk-api",
-        "sdk-autoconfigure"
+        "sdk-autoconfigure",
+        "sdk-test"
 )
 
 pluginManagement {
