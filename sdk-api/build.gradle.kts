@@ -1,8 +1,8 @@
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
-    kotlin("jvm")
-    id("java-library")
+    id("datalbry.kotlin")
+    id("datalbry.publish-maven-central")
     id("org.springframework.boot")
     id("io.spring.dependency-management")
 }
@@ -10,9 +10,6 @@ plugins {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
-
-// Set API version to parents major version
-version = project.parent!!.version.toString().split(".")[0]
 
 // ===========================================================================================
 // The org.springframework.boot plugin enables the bootJar task which builds an executable jar
@@ -31,8 +28,8 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
 
-    api("io.datalbry.config-schema:api:0.0.1")
-    api("io.datalbry.precise:api:0.0.4")
+    api("io.datalbry.commons:commons-config-api:0.0.1")
+    api("io.datalbry.precise:precise-api:0.0.5")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

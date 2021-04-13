@@ -1,8 +1,8 @@
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
-    kotlin("jvm")
-    id("java-library")
+    id("datalbry.kotlin")
+    id("datalbry.publish-maven-central")
     id("org.springframework.boot")
     id("io.spring.dependency-management")
     id("org.jetbrains.kotlin.plugin.allopen")
@@ -45,8 +45,8 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
 
-    implementation(project(":sdk-api"))
-    implementation("io.datalbry.alxndria:client-feign:0.0.2")
+    api(project(":sdk-api"))
+    implementation("io.datalbry.alxndria:alxndria-client-feign:0.0.3")
 
     api("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
