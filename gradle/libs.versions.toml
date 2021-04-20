@@ -1,12 +1,13 @@
 [versions]
 testcontainers = "1.15.1"
-precise = "0.0.5"
+precise = "0.0.6"
 commons-config = "0.0.1"
-alxndria-core = "0.0.3"
+alxndria-client = "0.0.3"
 alxndria-testcontainer = "1.0.0"
 jakarta-jms-api = "2.0.3"
 
 [libraries]
+apache-jms-artemis = { module = "org.apache.activemq:artemis-jms-server" }
 spring-web = { module = "org.springframework.boot:spring-boot-starter-web" }
 spring-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
 spring-artemis = { module = "org.springframework.boot:spring-boot-starter-artemis" }
@@ -19,9 +20,10 @@ postgres = { module = "org.postgresql:postgresql" }
 testcontainers-junit5  = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainers" }
 testcontainers-postgres = { module = "org.testcontainers:postgresql", version.ref = "testcontainers" }
 testcontainers-core = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
-datalbry-alxndria-client = { module = "io.datalbry.alxndria:alxndria-client-feign", version.ref = "alxndria-core"}
+datalbry-alxndria-client = { module = "io.datalbry.alxndria:alxndria-client-feign", version.ref = "alxndria-client" }
 datalbry-alxndria-testcontainer = { module = "io.datalbry.testcontainers:testcontainers-alxndria", version.ref = "alxndria-testcontainer"}
 datalbry-precise-api = { module = "io.datalbry.precise:precise-api", version.ref = "precise" }
+datalbry-precise-core = { module = "io.datalbry.precise:precise-core", version.ref = "precise" }
 datalbry-commons-config-api = { module = "io.datalbry.commons:commons-config-api", version.ref = "commons-config" }
 junit = { module = "org.junit.jupiter:junit-jupiter" }
 

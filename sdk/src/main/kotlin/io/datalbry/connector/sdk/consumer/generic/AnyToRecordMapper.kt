@@ -50,6 +50,5 @@ class AnyToRecordMapper {
                     else -> GenericField(it.name, getRecord(value))
                 }
             }
-
     }
 }

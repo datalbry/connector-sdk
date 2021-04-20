@@ -2,21 +2,17 @@ package io.datalbry.connector.sdk.consumer.generic
 
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import io.datalbry.precise.api.schema.Exclude
-import io.datalbry.precise.api.schema.document.Document
-import io.datalbry.precise.api.schema.document.Field
-import io.datalbry.precise.api.schema.document.generic.GenericDocument
-import io.datalbry.precise.api.schema.document.generic.GenericField
 import io.datalbry.connector.api.DocumentEdge
 import io.datalbry.connector.api.annotation.property.Checksum
 import io.datalbry.connector.sdk.consumer.AdditionMessageConsumer.Companion.CHECKSUM_FIELD
 import io.datalbry.connector.sdk.consumer.generic.GenericCrawlProcessor.Companion.TYPE_KEY
 import io.datalbry.connector.sdk.util.annotatedWith
-import io.datalbry.connector.sdk.util.isBasicFieldType
-import io.datalbry.precise.api.schema.document.generic.GenericRecord
+import io.datalbry.precise.api.schema.document.Document
+import io.datalbry.precise.api.schema.document.Field
+import io.datalbry.precise.api.schema.document.generic.GenericDocument
+import io.datalbry.precise.api.schema.document.generic.GenericField
 import java.util.*
 import kotlin.reflect.KClass
-import kotlin.reflect.KProperty1
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.javaGetter
 import io.datalbry.connector.api.annotation.property.Children as ChildrenAnnotation
