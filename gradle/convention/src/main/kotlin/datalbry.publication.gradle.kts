@@ -16,8 +16,7 @@ publishing {
 
 configure<SigningExtension> {
     useGpgCmd()
-    sign(publishing.publications["snapshot"])
-    sign(publishing.publications["release"])
+    sign(publishing.publications["maven"])
 }
 
 fun MavenPublication.pom() {
