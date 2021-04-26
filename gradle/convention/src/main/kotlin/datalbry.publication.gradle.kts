@@ -7,14 +7,8 @@ plugins {
 
 publishing {
     publications {
-        create<MavenPublication>("snapshot") {
-            val projectVersion = project.version as String
-            publication(projectVersion.suffixIfNot("-SNAPSHOT"))
-            pom()
-        }
-        create<MavenPublication>("release") {
-            val projectVersion = project.version as String
-            publication(projectVersion.removeSuffix("-SNAPSHOT"))
+        create<MavenPublication>("maven") {
+            publication()
             pom()
         }
     }
@@ -55,11 +49,17 @@ fun MavenPublication.pom() {
     }
 }
 
-fun MavenPublication.publication(publicationVersion: String) {
-    val projectGroup = project.group as String
+fun MavenPublication.findVersion(): String {
     val projectVersion = project.version as String
+    return if (project.hasProperty("releaseSnapshot")) {
+        return projectVersion.suffixIfNot("-SNAPSHOT")
+    } else projectVersion
+}
+
+fun MavenPublication.publication() {
+    val projectGroup = project.group as String
     artifactId = "${projectGroup.substringAfterLast(".")}-${project.name}"
-    version = publicationVersion
+    version = findVersion()
     from(components["java"])
 }
 
