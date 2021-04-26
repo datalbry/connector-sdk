@@ -32,11 +32,18 @@ jobs:
         with:
           arguments: test
           
+      - id: install-secret-key
+        name: Install gpg secret key
+        run: |
+          cat <(echo -e "${{ secrets.GNUPG_SECRET_KEY }}") | gpg --batch --import
+          gpg --list-secret-keys --keyid-format LONG
+          
       - uses: eskatos/gradle-command-action@v1
         with:
           arguments: publishSnapshotPublicationToSonatypeRepository
-        env: # Or as an environment variable
-          sonatypeUsername: ${{ secrets.SonatypeUsername }}
-          sonatypePassword: ${{ secrets.SonatypePassword }}
-          signing.gnupg.keyName: ${{ secrets.GnupgKeyname }}
-          signing.gnupg.passphrase: ${{ secrets.GnupgPassphrase }}
+        env:
+          sonatypeUsername: ${{ secrets.MAVENCENTRALUSERNAME }}
+          sonatypePassword: ${{ secrets.MAVENCENTRALPASSWORD }}
+          signing.gnupg.keyName: ${{ secrets.GNUPG_SECRET_NAME }}
+          signing.gnupg.passphrase: ${{ secrets.GNUPG_SECRET_PASSWORD }}
+          
