@@ -8,6 +8,7 @@ dependencies {
     api(project(":sdk-api"))
 
     implementation(libs.postgres)
+    implementation(libs.spring.actuator)
     implementation(libs.spring.data.jpa)
     implementation(libs.spring.artemis)
     implementation(libs.jackson.kotlin)

@@ -17,6 +17,14 @@ The Connector SDK requires various configurations to be set while installing.
 | **spring.datasource.username**                | Yes | admin | - | The user to authenticate to the database with |
 | **spring.datasource.password**                | Yes | admin123 | - | The password to authenticate to the database with |
 
+### Health Check
+The Connector is bundled with `Spring Actuator` by default. 
+This enables user to easily health check the Connector.
+
+The health check can be accessed using the following endpoint:
+> `GET <baseurl>:8080/actuator/health`
+
+
 ## License
 >Copyright 2021 DataLbry.io
 >
