@@ -16,13 +16,6 @@ repositories {
 version = getVersion(project)
 group = "io.datalbry.connector"
 
-dependencies {
-    runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.4.21")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.4.21")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-}
-
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")

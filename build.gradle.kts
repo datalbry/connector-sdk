@@ -12,4 +12,5 @@ subprojects {
 
 extra["springCloudVersion"] = "Hoxton.SR6"
 
-version = "0.0.6-SNAPSHOT"
+version = "0.0.9"
+

@@ -1,30 +1,21 @@
 package io.datalbry.connector.sdk.messaging.jms
 
+import io.datalbry.connector.sdk.ConnectorProperties
 import io.datalbry.connector.sdk.messaging.Channel
-import io.datalbry.connector.sdk.properties.ConnectorSDKProperties
-import io.datalbry.connector.sdk.properties.ConnectorSDKProperties.Companion.DATASOURCE_PROPERTY
 import io.datalbry.connector.sdk.state.NodeReference
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.jms.core.JmsTemplate
 
 class JmsDeletionChannel(
-        private val jmsTemplate: JmsTemplate
+    props: ConnectorProperties,
+    private val jmsTemplate: JmsTemplate
 ): Channel<NodeReference> {
-
-    @Value("\${$DATASOURCE_PROPERTY}") lateinit var datasourceKey: String
+    private val channel = "${props.alxndria.datasource}-${Channel.DESTINATION_NODE_DELETION}"
 
     override fun propagate(message: NodeReference) {
-        jmsTemplate.convertAndSend(
-            "${datasourceKey}-${Channel.DESTINATION_NODE_DELETION}",
-            message)
+        jmsTemplate.convertAndSend(channel, message)
     }
 
     override fun hasElement(): Boolean {
-        return jmsTemplate.browse(
-            "$datasourceKey-${Channel.DESTINATION_NODE_DELETION}"
-        ) {
-                _, browser -> browser.enumeration.hasMoreElements()
-        } ?: false
+        return jmsTemplate.browse(channel) { _, browser -> browser.enumeration.hasMoreElements() } ?: false
     }
-
 }
