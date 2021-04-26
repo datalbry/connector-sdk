@@ -12,6 +12,7 @@ junit = "5.7.0"
 apache-jms-artemis = { module = "org.apache.activemq:artemis-jms-server" }
 spring-web = { module = "org.springframework.boot:spring-boot-starter-web" }
 spring-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
+spring-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
 spring-artemis = { module = "org.springframework.boot:spring-boot-starter-artemis" }
 spring-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 spring-autoconfigure = { module = "org.springframework.boot:spring-boot-autoconfigure" }
