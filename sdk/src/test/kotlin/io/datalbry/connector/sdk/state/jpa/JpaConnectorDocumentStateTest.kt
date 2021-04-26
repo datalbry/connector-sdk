@@ -18,9 +18,9 @@ import org.springframework.util.StopWatch
 import org.testcontainers.junit.jupiter.Testcontainers
 import java.time.Duration
 
-@DataJpaTest
 @Testcontainers
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@DataJpaTest
 internal class JpaConnectorDocumentStateTest {
 
     @Autowired private lateinit var jpaConnectorDocumentState: JpaConnectorDocumentState
