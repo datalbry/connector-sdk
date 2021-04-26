@@ -1,5 +1,5 @@
 plugins {
-    id("datalbry.publish-maven-lock")
+    id("datalbry.publish-maven-central")
     idea
 }
 
@@ -10,4 +10,5 @@ subprojects {
     }
 }
 
+group = "io.datalbry.connector"
 version = "0.0.10"

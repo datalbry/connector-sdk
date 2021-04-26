@@ -13,8 +13,8 @@ repositories {
     google()
 }
 
-version = getVersion(project)
-group = "io.datalbry.connector"
+version = project.rootProject.version
+group = project.rootProject.group
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
@@ -43,16 +43,4 @@ java {
     withJavadocJar()
     withSourcesJar()
 }
-
-// Function to get the version of the archive
-fun getVersion(project: Project): String {
-    var version = project.version as String
-    var parent = project.parent
-    while (parent != null) {
-        version = parent.version as String
-        parent = parent.parent
-    }
-    return version
-}
-
 
