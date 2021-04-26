@@ -46,7 +46,7 @@ jobs:
         with:
           arguments: >
             publishMavenPublicationToSonatypeRepository
-            -PreleaseSnapshot=true
+            -Psnapshot=true
             -PsonatypeUsername=${{ secrets.MAVENCENTRALUSERNAME }}
             -PsonatypePassword=${{ secrets.MAVENCENTRALPASSWORD }}
             -Psigning.gnupg.keyName=${{ secrets.GNUPG_SECRET_NAME }}

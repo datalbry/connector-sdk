@@ -48,17 +48,11 @@ fun MavenPublication.pom() {
     }
 }
 
-fun MavenPublication.findVersion(): String {
-    val projectVersion = project.version as String
-    return if (project.hasProperty("releaseSnapshot")) {
-        return projectVersion.suffixIfNot("-SNAPSHOT")
-    } else projectVersion
-}
-
 fun MavenPublication.publication() {
     val projectGroup = project.group as String
+    val projectVersion = project.version as String
     artifactId = "${projectGroup.substringAfterLast(".")}-${project.name}"
-    version = findVersion()
+    version = projectVersion
     from(components["java"])
 }
 
