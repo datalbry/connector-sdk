@@ -7,14 +7,8 @@ plugins {
 
 publishing {
     publications {
-        create<MavenPublication>("snapshot") {
-            val projectVersion = project.version as String
-            publication(projectVersion.suffixIfNot("-SNAPSHOT"))
-            pom()
-        }
-        create<MavenPublication>("release") {
-            val projectVersion = project.version as String
-            publication(projectVersion.removeSuffix("-SNAPSHOT"))
+        create<MavenPublication>("maven") {
+            publication()
             pom()
         }
     }
@@ -22,8 +16,7 @@ publishing {
 
 configure<SigningExtension> {
     useGpgCmd()
-    sign(publishing.publications["snapshot"])
-    sign(publishing.publications["release"])
+    sign(publishing.publications["maven"])
 }
 
 fun MavenPublication.pom() {
@@ -55,11 +48,11 @@ fun MavenPublication.pom() {
     }
 }
 
-fun MavenPublication.publication(publicationVersion: String) {
+fun MavenPublication.publication() {
     val projectGroup = project.group as String
     val projectVersion = project.version as String
     artifactId = "${projectGroup.substringAfterLast(".")}-${project.name}"
-    version = publicationVersion
+    version = projectVersion
     from(components["java"])
 }
 
