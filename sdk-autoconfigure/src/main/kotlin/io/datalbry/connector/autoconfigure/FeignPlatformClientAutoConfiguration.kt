@@ -19,7 +19,7 @@ open class FeignPlatformClientAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(PlatformClient::class)
     open fun feignPlatformClient(properties: ConnectorProperties): FeignPlatformClient {
-        return FeignPlatformClient(properties.uri.toString())
+        return FeignPlatformClient(properties.alxndria.uri.toString())
     }
 
     @Bean
