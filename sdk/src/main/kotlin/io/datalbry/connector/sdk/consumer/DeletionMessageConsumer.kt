@@ -1,15 +1,13 @@
 package io.datalbry.connector.sdk.consumer
 
 import io.datalbry.alxndria.client.api.IndexClient
-import io.datalbry.connector.api.CrawlProcessor
-import io.datalbry.connector.api.DocumentEdge
+import io.datalbry.connector.sdk.ConnectorProperties
+import io.datalbry.connector.sdk.ConnectorProperties.Companion.ALXNDRIA_DATASOURCE_PROPERTY
 import io.datalbry.connector.sdk.messaging.Channel
-import io.datalbry.connector.sdk.properties.ConnectorSDKProperties.Companion.DATASOURCE_PROPERTY
 import io.datalbry.connector.sdk.state.ConnectorDocumentState
 import io.datalbry.connector.sdk.state.NodeReference
 import io.datalbry.precise.api.schema.document.Document
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.jms.annotation.JmsListener
 
 /**
@@ -25,13 +23,14 @@ import org.springframework.jms.annotation.JmsListener
  * @author timo gruen - 2020-11-15
  */
 class DeletionMessageConsumer(
+    props: ConnectorProperties,
     private val index: IndexClient,
     private val channel: Channel<NodeReference>,
     private val state: ConnectorDocumentState
 ) {
-    @Value("\${$DATASOURCE_PROPERTY}") lateinit var datasourceKey: String
+    private val datasourceKey = props.alxndria.datasource
 
-    @JmsListener(destination = "\${$DATASOURCE_PROPERTY}-${Channel.DESTINATION_NODE_DELETION}")
+    @JmsListener(destination = DESTINATION)
     fun consume(node: NodeReference) {
         val lock = state.lock(node)
 
@@ -58,6 +57,7 @@ class DeletionMessageConsumer(
     }
 
     companion object {
+        const val DESTINATION = "\${$ALXNDRIA_DATASOURCE_PROPERTY}-${Channel.DESTINATION_NODE_DELETION}"
         private val log = LoggerFactory.getLogger(DeletionMessageConsumer::class.java)
     }
 }

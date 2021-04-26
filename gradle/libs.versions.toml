@@ -5,6 +5,8 @@ commons-config = "0.0.1"
 alxndria-client = "0.0.3"
 alxndria-testcontainer = "1.0.0"
 jakarta-jms-api = "2.0.3"
+kotlin = "1.4.21"
+junit = "5.7.0"
 
 [libraries]
 apache-jms-artemis = { module = "org.apache.activemq:artemis-jms-server" }
@@ -25,8 +27,12 @@ datalbry-alxndria-testcontainer = { module = "io.datalbry.testcontainers:testcon
 datalbry-precise-api = { module = "io.datalbry.precise:precise-api", version.ref = "precise" }
 datalbry-precise-core = { module = "io.datalbry.precise:precise-core", version.ref = "precise" }
 datalbry-commons-config-api = { module = "io.datalbry.commons:commons-config-api", version.ref = "commons-config" }
-junit = { module = "org.junit.jupiter:junit-jupiter" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
+junit-jupiter-core = { module = "org.junit.jupiter:junit-jupiter" }
+junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
 
 [bundles]
 testcontainers = ["testcontainers-junit5", "testcontainers-postgres", "testcontainers-core"]
-testing = ["junit", "testcontainers-junit5", "testcontainers-postgres", "testcontainers-core", "spring-test"]
+testing = ["junit-jupiter-core", "testcontainers-junit5", "testcontainers-postgres", "testcontainers-core", "spring-test"]

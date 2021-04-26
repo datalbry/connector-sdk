@@ -4,17 +4,17 @@ import io.datalbry.alxndria.client.api.IndexClient
 import io.datalbry.precise.api.schema.document.Document
 import io.datalbry.connector.api.CrawlProcessor
 import io.datalbry.connector.api.DocumentEdge
+import io.datalbry.connector.sdk.ConnectorProperties
+import io.datalbry.connector.sdk.ConnectorProperties.Companion.CONCURRENCY_PROPERTY
+import io.datalbry.connector.sdk.ConnectorProperties.Companion.ALXNDRIA_DATASOURCE_PROPERTY
 import io.datalbry.connector.sdk.consumer.AdditionMessageConsumer.Companion.CHECKSUM_FIELD
 import io.datalbry.connector.sdk.extension.toDocumentState
 import io.datalbry.connector.sdk.messaging.Channel
-import io.datalbry.connector.sdk.properties.ConnectorSDKProperties.Companion.CONCURRENCY_PROPERTY
-import io.datalbry.connector.sdk.properties.ConnectorSDKProperties.Companion.DATASOURCE_PROPERTY
 import io.datalbry.connector.sdk.state.ConnectorDocumentState
 import io.datalbry.connector.sdk.state.Lock
 import io.datalbry.connector.sdk.state.NodeReference
 import io.datalbry.precise.api.schema.document.generic.GenericDocument
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.jms.annotation.JmsListener
 
 /**
@@ -46,6 +46,7 @@ import org.springframework.jms.annotation.JmsListener
  * @author timo gruen - 2020-11-15
  */
 class AdditionMessageConsumer(
+    props: ConnectorProperties,
     private val index: IndexClient,
     private val processor: CrawlProcessor<DocumentEdge, Document>,
     private val deletionChannel: Channel<NodeReference>,
@@ -53,9 +54,9 @@ class AdditionMessageConsumer(
     private val state: ConnectorDocumentState
 ) {
 
-    @Value("\${$DATASOURCE_PROPERTY}") lateinit var datasourceKey: String
+    private val datasourceKey = props.alxndria.datasource
 
-    @JmsListener(destination = "\${$DATASOURCE_PROPERTY}-${Channel.DESTINATION_NODE_ADDITION}", concurrency = "\${$CONCURRENCY_PROPERTY:1}")
+    @JmsListener(destination = DESTINATION, concurrency = CONCURRENCY)
     fun consume(edge: DocumentEdge) {
         val node = NodeReference(edge.uuid)
         val lock = state.lock(node)
@@ -109,6 +110,9 @@ class AdditionMessageConsumer(
 
     companion object {
         const val CHECKSUM_FIELD = "_checksum"
+        const val CONCURRENCY_DEFAULT = 1
+        const val CONCURRENCY = "\${$CONCURRENCY_PROPERTY:$CONCURRENCY_DEFAULT}"
+        const val DESTINATION = "\${$ALXNDRIA_DATASOURCE_PROPERTY}-${Channel.DESTINATION_NODE_ADDITION}"
         private val log = LoggerFactory.getLogger(AdditionMessageConsumer::class.java)
     }
 }
