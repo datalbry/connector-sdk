@@ -7,7 +7,7 @@ import java.net.URI
 @ConstructorBinding
 @ConfigurationProperties("io.datalbry.connector")
 data class ConnectorProperties(
-    val concurrency: Int,
+    val concurrency: Int = 1,
     val alxndria: AlxndriaProperties
 ) {
 
