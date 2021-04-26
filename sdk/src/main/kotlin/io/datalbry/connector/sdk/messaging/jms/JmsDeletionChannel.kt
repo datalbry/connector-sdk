@@ -9,7 +9,6 @@ class JmsDeletionChannel(
     props: ConnectorProperties,
     private val jmsTemplate: JmsTemplate
 ): Channel<NodeReference> {
-
     private val channel = "${props.alxndria.datasource}-${Channel.DESTINATION_NODE_DELETION}"
 
     override fun propagate(message: NodeReference) {

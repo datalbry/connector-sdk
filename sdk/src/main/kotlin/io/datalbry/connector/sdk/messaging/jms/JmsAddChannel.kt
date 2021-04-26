@@ -11,7 +11,6 @@ class JmsAddChannel(
 )
     : Channel<DocumentEdge>
 {
-
     private val channel = "${props.alxndria.datasource}-${Channel.DESTINATION_NODE_ADDITION}"
 
     override fun propagate(message: DocumentEdge) {
