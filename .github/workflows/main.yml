@@ -34,7 +34,21 @@ jobs:
         name: Tests
         with:
           arguments: test
-          
+
+  release:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v2
+        name: Checkout
+
+      - uses: actions/setup-java@v1
+        name: Setup Java
+        with:
+          java-version: 11
+
       - id: install-secret-key
         name: Install GnuPG Key
         run: |
