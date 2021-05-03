@@ -1,21 +1,17 @@
-package io.datalbry.connector.sdk.messaging.jms
+package io.datalbry.connector.sdk.messaging.amqp
 
 import io.datalbry.connector.sdk.ConnectorProperties
 import io.datalbry.connector.sdk.messaging.Channel
 import io.datalbry.connector.sdk.state.NodeReference
-import org.springframework.jms.core.JmsTemplate
+import org.springframework.amqp.rabbit.core.RabbitTemplate
 
-class JmsDeletionChannel(
+class RabbitMqDeletionChannel(
     props: ConnectorProperties,
-    private val jmsTemplate: JmsTemplate
+    private val rabbitMq: RabbitTemplate
 ): Channel<NodeReference> {
     private val channel = "${props.alxndria.datasource}-${Channel.DESTINATION_NODE_DELETION}"
 
     override fun propagate(message: NodeReference) {
-        jmsTemplate.convertAndSend(channel, message)
-    }
-
-    override fun hasElement(): Boolean {
-        return jmsTemplate.browse(channel) { _, browser -> browser.enumeration.hasMoreElements() } ?: false
+        rabbitMq.convertAndSend(channel, message)
     }
 }

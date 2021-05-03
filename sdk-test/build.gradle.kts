@@ -10,6 +10,7 @@ dependencies {
 
     implementation(libs.apache.jms.artemis)
     implementation(libs.postgres)
+    implementation(libs.testcontainers.rabbitmq)
     implementation(libs.datalbry.alxndria.testcontainer)
     implementation(libs.kotlin.stdlib)
 

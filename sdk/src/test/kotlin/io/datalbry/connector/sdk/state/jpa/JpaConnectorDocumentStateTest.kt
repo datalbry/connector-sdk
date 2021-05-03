@@ -9,9 +9,11 @@ import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.slf4j.LoggerFactory
+import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.StopWatch
@@ -24,6 +26,7 @@ import java.time.Duration
 internal class JpaConnectorDocumentStateTest {
 
     @Autowired private lateinit var jpaConnectorDocumentState: JpaConnectorDocumentState
+    @MockBean private lateinit var rabbit: RabbitTemplate
 
     @Test
     @Transactional(propagation = Propagation.NOT_SUPPORTED)

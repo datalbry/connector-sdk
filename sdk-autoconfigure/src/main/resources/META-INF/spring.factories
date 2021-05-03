@@ -1,7 +1,7 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 io.datalbry.connector.autoconfigure.FeignPlatformClientAutoConfiguration,\
 io.datalbry.connector.autoconfigure.GenericCrawlProcessorAutoConfiguration,\
-io.datalbry.connector.autoconfigure.jms.JmsAutoConfiguration,\
-io.datalbry.connector.autoconfigure.jms.JmsChannelAutoConfiguration,\
-io.datalbry.connector.autoconfigure.jms.MessageConsumerAutoConfiguration,\
+io.datalbry.connector.autoconfigure.amqp.AmqpAutoConfiguration,\
+io.datalbry.connector.autoconfigure.amqp.RabbitMqChannelAutoConfiguration,\
+io.datalbry.connector.autoconfigure.consumer.MessageConsumerAutoConfiguration,\
 io.datalbry.connector.autoconfigure.state.JpaConnectorDocumentStateAutoConfiguration

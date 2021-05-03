@@ -15,10 +15,10 @@ import io.datalbry.connector.sdk.state.Lock
 import io.datalbry.connector.sdk.state.NodeReference
 import io.datalbry.precise.api.schema.document.generic.GenericDocument
 import org.slf4j.LoggerFactory
-import org.springframework.jms.annotation.JmsListener
+import org.springframework.amqp.rabbit.annotation.RabbitListener
 
 /**
- * The [AdditionMessageConsumer] contains the logic on how to consume JMS messages (in form of [DocumentEdge])
+ * The [AdditionMessageConsumer] contains the logic on how to consume AMQP messages (in form of [DocumentEdge])
  *
  * Internally relying on a single [CrawlProcessor] of type [DocumentEdge] and [Document].
  * By default we are using the [io.datalbry.connector.sdk.consumer.generic.GenericCrawlProcessor] which is able to
@@ -56,7 +56,7 @@ class AdditionMessageConsumer(
 
     private val datasourceKey = props.alxndria.datasource
 
-    @JmsListener(destination = DESTINATION, concurrency = CONCURRENCY)
+    @RabbitListener(queues = [DESTINATION], concurrency = CONCURRENCY)
     fun consume(edge: DocumentEdge) {
         val node = NodeReference(edge.uuid)
         val lock = state.lock(node)

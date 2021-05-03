@@ -13,15 +13,15 @@ apache-jms-artemis = { module = "org.apache.activemq:artemis-jms-server" }
 spring-web = { module = "org.springframework.boot:spring-boot-starter-web" }
 spring-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
 spring-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
-spring-artemis = { module = "org.springframework.boot:spring-boot-starter-artemis" }
+spring-amqp = { module = "org.springframework.boot:spring-boot-starter-amqp" }
 spring-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 spring-autoconfigure = { module = "org.springframework.boot:spring-boot-autoconfigure" }
-spring-jms = { module = "org.springframework:spring-jms" }
 jackson-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" }
 jakarata-jms-api = { module = "jakarta.jms:jakarta.jms-api", version.ref = "jakarta-jms-api"}
 postgres = { module = "org.postgresql:postgresql" }
 testcontainers-junit5  = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainers" }
 testcontainers-postgres = { module = "org.testcontainers:postgresql", version.ref = "testcontainers" }
+testcontainers-rabbitmq = { module = "org.testcontainers:rabbitmq", version.ref = "testcontainers" }
 testcontainers-core = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
 datalbry-alxndria-client = { module = "io.datalbry.alxndria:alxndria-client-feign", version.ref = "alxndria-client" }
 datalbry-alxndria-testcontainer = { module = "io.datalbry.testcontainers:testcontainers-alxndria", version.ref = "alxndria-testcontainer"}
