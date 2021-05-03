@@ -97,18 +97,6 @@ jobs:
             writeVersion
             -PprojectVersion=${{ github.event.inputs.version }}
 
-      - uses: EndBug/add-and-commit@v7
-        name: Commit Version
-        with:
-          add: 'gradle.properties'
-          message: '[CI] Release Version ${{ github.event.inputs.version }}'
-          tag: 'v${{ github.event.inputs.version  }}'
-
-  Post-Release:
-    runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/master' && github.event.inputs.version != '' }}
-    needs: Release
-    steps:
       - uses: eskatos/gradle-command-action@v1
         name: Release
         with:
@@ -119,6 +107,26 @@ jobs:
             -PsonatypePassword=${{ secrets.MAVENCENTRALPASSWORD }}
             -Psigning.gnupg.keyName=${{ secrets.GNUPG_SECRET_NAME }}
             -Psigning.gnupg.passphrase=${{ secrets.GNUPG_SECRET_PASSWORD }}
+
+      - uses: EndBug/add-and-commit@v7
+        name: Commit Version
+        with:
+          add: 'gradle.properties'
+          message: '[CI] Release Version ${{ github.event.inputs.version }}'
+          tag: 'v${{ github.event.inputs.version  }}'
+
+  Raise-Version:
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/master' && github.event.inputs.version != '' }}
+    needs: Release
+    steps:
+      - uses: actions/checkout@v2
+        name: Checkout
+
+      - uses: actions/setup-java@v1
+        name: Setup Java
+        with:
+          java-version: 11
 
       - uses: eskatos/gradle-command-action@v1
         name: Raise Version
@@ -132,4 +140,6 @@ jobs:
         with:
           add: 'gradle.properties'
           message: '[CI] Raise Version to next Patch Release'
+
+
 
