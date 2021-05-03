@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.util.removeSuffixIfPresent
 import org.jetbrains.kotlin.util.suffixIfNot
 
 val projectVersion: String by project
@@ -15,8 +16,8 @@ tasks.register<WriteProperties>("writeVersion") {
 }
 
 tasks.register<WriteProperties>("incrementVersion") {
-    val currentMinor = projectVersion.substringAfterLast(".").toInt()
-    val newVersion = "${projectVersion.substringBeforeLast(".")}.${currentMinor + 1}"
+    val currentVersion = projectVersion.removeSuffixIfPresent("-SNAPSHOT").substringAfterLast(".")
+    val newVersion = "${projectVersion.substringBeforeLast(".")}.${currentVersion + 1}"
     this.outputFile = project.rootProject.file("gradle.properties")
     this.property("projectVersion", newVersion)
 }
