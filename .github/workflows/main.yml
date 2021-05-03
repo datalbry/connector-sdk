@@ -72,7 +72,7 @@ jobs:
 
   Release:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && github.event.inputs.version != '' }}
+    if: ${{ github.ref == 'refs/heads/master' && github.event.inputs.version != '' }}
     needs: Build
 
     steps:
@@ -106,7 +106,7 @@ jobs:
 
   Post-Release:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && github.event.inputs.version != '' }}
+    if: ${{ github.ref == 'refs/heads/master' && github.event.inputs.version != '' }}
     needs: Release
     steps:
       - uses: eskatos/gradle-command-action@v1
