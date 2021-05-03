@@ -8,10 +8,10 @@ import io.datalbry.connector.sdk.state.ConnectorDocumentState
 import io.datalbry.connector.sdk.state.NodeReference
 import io.datalbry.precise.api.schema.document.Document
 import org.slf4j.LoggerFactory
-import org.springframework.jms.annotation.JmsListener
+import org.springframework.amqp.rabbit.annotation.RabbitListener
 
 /**
- * The [DeletionMessageConsumer] contains the logic on how to consume JMS messages (in form of [NodeReference])
+ * The [DeletionMessageConsumer] contains the logic on how to consume AMQP messages (in form of [NodeReference])
  *
  * In contrast to the [AdditionMessageConsumer], the [DeletionMessageConsumer] consumes [NodeReference] and
  * deletes the corresponding [Document]s as well as propagating the deletions of further Nodes by their [NodeReference].
@@ -30,7 +30,7 @@ class DeletionMessageConsumer(
 ) {
     private val datasourceKey = props.alxndria.datasource
 
-    @JmsListener(destination = DESTINATION)
+    @RabbitListener(queues = [DESTINATION])
     fun consume(node: NodeReference) {
         val lock = state.lock(node)
 

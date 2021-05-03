@@ -8,7 +8,7 @@ dependencies {
 
     compileOnly(libs.datalbry.alxndria.client)
     compileOnly(libs.jakarata.jms.api)
-    compileOnly(libs.spring.jms)
+    compileOnly(libs.spring.amqp)
     compileOnly(libs.spring.data.jpa)
     compileOnly(libs.jackson.kotlin)
 

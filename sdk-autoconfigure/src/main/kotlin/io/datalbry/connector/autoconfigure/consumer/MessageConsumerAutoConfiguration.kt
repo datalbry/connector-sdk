@@ -1,4 +1,4 @@
-package io.datalbry.connector.autoconfigure.jms
+package io.datalbry.connector.autoconfigure.consumer
 
 import io.datalbry.alxndria.client.api.IndexClient
 import io.datalbry.precise.api.schema.document.Document

@@ -9,7 +9,7 @@ dependencies {
     implementation(libs.postgres)
     implementation(libs.spring.actuator)
     implementation(libs.spring.data.jpa)
-    implementation(libs.spring.artemis)
+    implementation(libs.spring.amqp)
     implementation(libs.jackson.kotlin)
     implementation(libs.datalbry.alxndria.client)
 
