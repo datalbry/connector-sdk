@@ -16,8 +16,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set selected color
-        run: echo 'Version ${{ github.event.inputs.version }}'
+      - name: Test version
+        run: echo ${{ github.event.inputs.version == ''}}
 
       - uses: actions/checkout@v2
         name: Checkout
