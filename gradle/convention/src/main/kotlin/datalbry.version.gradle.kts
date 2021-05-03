@@ -9,6 +9,11 @@ fun findVersion(baseVersion: String): String {
     } else baseVersion
 }
 
+tasks.register<WriteProperties>("writeVersion") {
+    this.outputFile = project.rootProject.file("gradle.properties")
+    this.property("projectVersion", version)
+}
+
 tasks.register<WriteProperties>("incrementVersion") {
     val currentMinor = projectVersion.substringAfterLast(".").toInt()
     val newVersion = "${projectVersion.substringBeforeLast(".")}.${currentMinor + 1}"
