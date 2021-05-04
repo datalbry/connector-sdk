@@ -14,4 +14,9 @@ dependencies {
     implementation(libs.kotlin.stdlib)
 
     runtimeOnly(libs.kotlin.reflect)
+
+    testRuntimeOnly(project(":sdk-autoconfigure"))
+
+    // TODO Delete me
+    testImplementation(libs.spring.amqp)
 }

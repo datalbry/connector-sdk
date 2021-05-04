@@ -7,11 +7,12 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate
 
 class RabbitMqAddChannel(private val rabbitMq: RabbitTemplate) : Channel<DocumentEdge> {
     private val topic = Channel.DESTINATION_NODE_ADDITION
+    private val routing = Channel.DESTINATION_NODE_ADDITION
 
     override fun propagate(message: DocumentEdge) {
         val headers = message.headers.toMutableMap()
         headers["_type"] = DocumentEdge::class.qualifiedName.toString()
         val enrichedMessage = message.copy(headers = headers)
-        rabbitMq.convertAndSend(topic, enrichedMessage)
+        rabbitMq.convertAndSend(topic, routing, enrichedMessage)
     }
 }
