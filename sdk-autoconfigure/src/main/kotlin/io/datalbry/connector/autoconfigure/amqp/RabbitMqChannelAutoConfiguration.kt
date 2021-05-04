@@ -1,6 +1,5 @@
 package io.datalbry.connector.autoconfigure.amqp
 
-import io.datalbry.connector.sdk.ConnectorProperties
 import io.datalbry.connector.sdk.messaging.amqp.RabbitMqAddChannel
 import io.datalbry.connector.sdk.messaging.amqp.RabbitMqDeletionChannel
 import org.springframework.amqp.rabbit.core.RabbitTemplate
@@ -14,20 +13,8 @@ import org.springframework.context.annotation.Configuration
 @AutoConfigureAfter(AmqpAutoConfiguration::class)
 open class RabbitMqChannelAutoConfiguration {
 
-    @Bean
-    open fun rabbitmqAddChannel(
-        props: ConnectorProperties,
-        rabbitmq: RabbitTemplate
-    ): RabbitMqAddChannel {
-        return RabbitMqAddChannel(props, rabbitmq)
-    }
+    @Bean open fun rabbitmqAddChannel(rabbitmq: RabbitTemplate) = RabbitMqAddChannel(rabbitmq)
 
-    @Bean
-    open fun rabbitmqDeletionChannel(
-        props: ConnectorProperties,
-        rabbitmq: RabbitTemplate
-    ): RabbitMqDeletionChannel {
-        return RabbitMqDeletionChannel(props, rabbitmq)
-    }
+    @Bean open fun rabbitmqDeletionChannel(rabbitmq: RabbitTemplate) = RabbitMqDeletionChannel(rabbitmq)
 
 }
