@@ -8,7 +8,6 @@ dependencies {
     api(libs.datalbry.precise.core)
     api(libs.datalbry.alxndria.client)
 
-    implementation(libs.apache.jms.artemis)
     implementation(libs.postgres)
     implementation(libs.testcontainers.rabbitmq)
     implementation(libs.datalbry.alxndria.testcontainer)
