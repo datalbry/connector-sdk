@@ -7,6 +7,7 @@ import io.datalbry.connector.api.DocumentEdge
 import io.datalbry.connector.api.DocumentNode
 import io.datalbry.connector.api.Node
 import io.datalbry.connector.api.document.DocumentProcessor
+import org.slf4j.LoggerFactory
 
 /**
  * The [GenericCrawlProcessor] is the main entry point for the high level layer of the Connector SDK.
@@ -34,12 +35,24 @@ class GenericCrawlProcessor(
 
     private val jackson = jacksonObjectMapper()
 
-    override fun process(value: DocumentEdge): Node<DocumentEdge, Document> {
-        val processor = inner.first { value.headers[TYPE_KEY] == it.consumes().name }
-        val typedObj = toObj(value.payload, processor.consumes())
-        val genericDocuments = processor.process(typedObj)
+    init {
+        inner
+            .groupBy { it.consumes() }
+            .filter { (_, processors) -> processors.size > 1 }
+            .forEach {
+                log.warn(
+                    "Multiple processors for [${it.key.simpleName}] found. " +
+                            "This is supported, but might result into less stability," +
+                            " as huge chunks of the source system are touched at once"
+                )
+            }
+    }
 
-        val pair = genericDocuments
+    override fun process(value: DocumentEdge): Node<DocumentEdge, Document> {
+        val pair = inner
+            .filter { value.headers[TYPE_KEY] == it.consumes().name }
+            .map { toObj(value.payload, it.consumes()) to it }
+            .flatMap { (obj, processor) -> processor.process(obj) }
             .map { it to mapper.first{ m -> m.supports(it)} }
             .map { it.second.getDocuments(it.first) to it.second.getEdges(it.first) }
             .reduce { acc, i -> acc.first.union(i.first) to acc.second.union(i.second) }
@@ -52,6 +65,8 @@ class GenericCrawlProcessor(
     }
 
     companion object {
+        private val log = LoggerFactory.getLogger(GenericCrawlProcessor::class.java)
+
         const val TYPE_KEY = "type"
         const val UUID_KEY = "uuid"
         const val PRODUCER_KEY = "producer"

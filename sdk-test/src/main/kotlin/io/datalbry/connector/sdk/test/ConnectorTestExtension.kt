@@ -48,7 +48,7 @@ class ConnectorTestExtension: BeforeAllCallback, AfterAllCallback  {
 
     private fun getRabbitVersion() = getEnvOrDefault("test.rabbitmq.container.version", "3.7.25-management-alpine")
     private fun getPostgresVersion() = getEnvOrDefault("test.postgres.container.version", "9.6.12")
-    private fun getAlxndriaVersion() = getEnvOrDefault("test.alxndria.container.version", "0.0.3-SNAPSHOT")
+    private fun getAlxndriaVersion() = getEnvOrDefault("test.alxndria.container.version", "0.0.4-SNAPSHOT")
 
     companion object {
         const val TEST_DATASOURCE = "test"
