@@ -1,7 +1,6 @@
 package io.datalbry.connector.plugin
 
-import io.datalbry.connector.plugin.config.DependencyManagementProperties
-import io.datalbry.connector.plugin.config.KeycloakProperties
+import io.datalbry.connector.plugin.config.*
 import io.datalbry.connector.plugin.util.domainObjectContainer
 import io.datalbry.connector.plugin.util.property
 import org.gradle.api.NamedDomainObjectContainer
@@ -14,8 +13,14 @@ class ConnectorPluginExtension @Inject constructor(project: Project) {
 
     private val objects = project.objects
 
-    var keycloak: NamedDomainObjectContainer<KeycloakProperties> = objects.domainObjectContainer()
-    var dependencyManagement: NamedDomainObjectContainer<DependencyManagementProperties> = objects.domainObjectContainer()
-    var configSchemaPath: Property<String> = objects.property()
-    var documentSchemaPath: Property<String> = objects.property()
+    var keycloak: KeycloakProperties = TODO()
+    var language: ProgrammingLanguage = TODO()
+    var container: ContainerProperties = TODO()
+    val java: JavaProperties = TODO()
+    val kotlin: KotlinProperties = TODO()
+    val spring: SpringProperties = TODO()
+    var dependencyManagement: DependencyManagementProperties = TODO()
+    var configSchemaPath: String = TODO()
+    var documentSchemaPath: String = TODO()
+
 }

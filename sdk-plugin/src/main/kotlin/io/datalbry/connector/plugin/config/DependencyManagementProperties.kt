@@ -22,5 +22,8 @@ package io.datalbry.connector.plugin.config
  */
 class DependencyManagementProperties {
     val enabled: Boolean = true
-    val version = ""
+    val language = ProgrammingLanguage.KOTLIN
+    val versionCommonsConfig = ""
+    val versionConnectorSdk = ""
+    val versionPrecise = ""
 }
