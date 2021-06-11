@@ -8,6 +8,7 @@ include(
         "sdk",
         "sdk-api",
         "sdk-autoconfigure",
+        "sdk-plugin",
         "sdk-test"
 )
 
