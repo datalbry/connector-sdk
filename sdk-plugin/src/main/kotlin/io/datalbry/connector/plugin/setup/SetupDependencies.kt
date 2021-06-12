@@ -1,6 +1,7 @@
 package io.datalbry.connector.plugin.setup
 
 import com.google.devtools.ksp.gradle.KspGradleSubplugin
+import io.datalbry.connector.plugin.ConnectorPluginExtension
 import io.datalbry.connector.plugin.config.DependencyManagementProperties
 import io.datalbry.connector.plugin.config.ProgrammingLanguage
 import org.gradle.api.Project
@@ -17,7 +18,8 @@ internal const val CONFIGURATION_KSP = "ksp"
  *
  * @author timo gruen - 2021-06-11
  */
-fun Project.setupDependencies(properties: DependencyManagementProperties) {
+fun Project.setupDependencies(extension: ConnectorPluginExtension) {
+    val properties = extension.dependencyManagement
     if (!properties.enabled) return
     val dependencies = project.dependencies
     project.setupKsp(properties)
@@ -43,7 +45,6 @@ private fun DependencyHandler.setupCommonsConfigDependencies(properties: Depende
     add(CONFIGURATION_RUNTIME, "io.datalbry.commons:commons-config-api:$version")
     when (properties.language) {
         ProgrammingLanguage.KOTLIN -> add(CONFIGURATION_KSP, "io.datalbry.commons:commons-config-processor-kotlin:$version")
-        ProgrammingLanguage.JAVA -> TODO("Not yet supported")
     }
 }
 
@@ -51,7 +52,6 @@ private fun DependencyHandler.setupPreciseDependencies(properties: DependencyMan
     val version = properties.versionPrecise
     when (properties.language) {
         ProgrammingLanguage.KOTLIN -> add(CONFIGURATION_KSP, "io.datalbry.precise:precise-processor-kotlin:$version")
-        ProgrammingLanguage.JAVA -> TODO("Not yet supported")
     }
 }
 

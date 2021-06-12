@@ -10,10 +10,9 @@ class ConnectorPlugin: Plugin<Project> {
 
     override fun apply(project: Project) {
         val extension = project.extensions.create(EXTENSION_NAME, ConnectorPluginExtension::class.java, project)
-        project.setupLanguage(extension.java, extension.kotlin, extension.dependencyManagement.language)
-        project.setupDependencies(extension.dependencyManagement)
-        project.setupSpringBoot(extension.spring)
-
+        project.setupLanguage(extension)
+        project.setupDependencies(extension)
+        project.setupSpringBoot(extension)
     }
 
     companion object {

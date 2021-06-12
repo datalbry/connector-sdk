@@ -1,6 +1,6 @@
 package io.datalbry.connector.plugin.setup
 
-import io.datalbry.connector.plugin.config.SpringProperties
+import io.datalbry.connector.plugin.ConnectorPluginExtension
 import io.spring.gradle.dependencymanagement.DependencyManagementPlugin
 import org.gradle.api.Project
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
@@ -11,7 +11,7 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
  *
  * @author timo gruen - 2021-06-11
  */
-fun Project.setupSpringBoot(spring: SpringProperties) {
+fun Project.setupSpringBoot(extension: ConnectorPluginExtension) {
     plugins.apply(SpringBootPlugin::class.java)
     plugins.apply(DependencyManagementPlugin::class.java)
 
@@ -21,9 +21,9 @@ fun Project.setupSpringBoot(spring: SpringProperties) {
         manifest {
             it.attributes(
                 mapOf(
-                    "Connector-Title" to project.name,
-                    "Connector-Group" to project.group,
-                    "Connector-Version" to project.version
+                    "Connector-Title" to extension.name,
+                    "Connector-Group" to extension.group,
+                    "Connector-Version" to extension.version
                 )
             )
         }

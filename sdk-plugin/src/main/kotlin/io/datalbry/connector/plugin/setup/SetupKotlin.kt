@@ -1,6 +1,6 @@
 package io.datalbry.connector.plugin.setup
 
-import io.datalbry.connector.plugin.config.JavaProperties
+import io.datalbry.connector.plugin.ConnectorPluginExtension
 import io.datalbry.connector.plugin.config.KotlinProperties
 import io.datalbry.connector.plugin.config.ProgrammingLanguage
 import io.datalbry.connector.plugin.config.ProgrammingLanguage.KOTLIN
@@ -18,13 +18,12 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
  *
  * @author timo gruen - 2021-06-11
  */
-fun Project.setupLanguage(java: JavaProperties, kotlin: KotlinProperties, language: ProgrammingLanguage) {
+fun Project.setupLanguage(extension: ConnectorPluginExtension) {
     // FIXME: Check how to pass the arguments, without building a complex,
     //        implicit dependency between the different configurations
-    setupJvm(kotlin)
-    when (language) {
-        KOTLIN -> setupKotlin(kotlin)
-        ProgrammingLanguage.JAVA -> TODO()
+    setupJvm(extension.kotlin)
+    when (extension.dependencyManagement.language) {
+        KOTLIN -> setupKotlin(extension.kotlin)
     }
 }
 
