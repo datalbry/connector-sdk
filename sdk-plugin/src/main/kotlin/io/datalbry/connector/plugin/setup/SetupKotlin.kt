@@ -21,9 +21,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 fun Project.setupLanguage(extension: ConnectorPluginExtension) {
     // FIXME: Check how to pass the arguments, without building a complex,
     //        implicit dependency between the different configurations
-    setupJvm(extension.kotlin)
-    when (extension.dependencyManagement.language) {
-        KOTLIN -> setupKotlin(extension.kotlin)
+    setupJvm(extension.getKotlin())
+    when (ProgrammingLanguage.byName(extension.language.getOrElse("kotlin"))) {
+        KOTLIN -> setupKotlin(extension.getKotlin())
     }
 }
 
@@ -33,7 +33,7 @@ private fun Project.setupJvm(kotlin: KotlinProperties) {
 }
 
 private fun Project.setupKotlin(kotlin: KotlinProperties) {
-    project.dependencies.setupKotlinDependencies(kotlin.version)
+    project.dependencies.setupKotlinDependencies(kotlin.version.getOrElse(""))
     project.setupKotlinCompile(kotlin)
 }
 
@@ -46,7 +46,7 @@ private fun Project.setupKotlinCompile(kotlin: KotlinProperties) {
     tasks.withType(KotlinCompile::class.java) {
         with(it.kotlinOptions) {
             this.freeCompilerArgs = listOf("-Xjsr305=strict")
-            this.jvmTarget = kotlin.targetCompatibility
+            this.jvmTarget = kotlin.targetCompatibility.getOrElse("1.8")
         }
     }
 }
@@ -60,8 +60,8 @@ private fun Project.setupJavaPlugin() {
 
 private fun Project.setupJavaCompile(kotlin: KotlinProperties) {
     tasks.withType(JavaCompile::class.java) {
-        it.sourceCompatibility = kotlin.sourceCompatibility
-        it.targetCompatibility = kotlin.targetCompatibility
+        it.sourceCompatibility = kotlin.sourceCompatibility.getOrElse("1.8")
+        it.targetCompatibility = kotlin.targetCompatibility.getOrElse("1.8")
     }
 }
 

@@ -1,9 +1,9 @@
 package io.datalbry.connector.plugin.config
 
-class KotlinProperties {
+import org.gradle.api.provider.Property
 
-    val sourceCompatibility: String = TODO()
-    val targetCompatibility: String = TODO()
-    val version: String = TODO()
-
+interface KotlinProperties {
+    val sourceCompatibility: Property<String>
+    val targetCompatibility: Property<String>
+    val version: Property<String>
 }

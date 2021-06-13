@@ -1,8 +1,10 @@
 package io.datalbry.connector.plugin.config
 
-class ContainerProperties {
-    val enabled: Boolean = true
-    val repository: String = TODO()
-    val username: String? = TODO()
-    val password: String? = TODO()
+import org.gradle.api.provider.Property
+
+interface ContainerProperties {
+    val enabled: Property<Boolean>
+    val repository: Property<String>
+    val username: Property<String>
+    val password: Property<String>
 }

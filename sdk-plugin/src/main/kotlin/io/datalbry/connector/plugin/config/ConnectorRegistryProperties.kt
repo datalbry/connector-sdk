@@ -1,5 +1,7 @@
 package io.datalbry.connector.plugin.config
 
-data class ConnectorRegistryProperties(
-    val baseUrl: String
-)
+import org.gradle.api.provider.Property
+
+interface ConnectorRegistryProperties {
+    val baseUrl: Property<String>
+}

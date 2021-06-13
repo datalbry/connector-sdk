@@ -19,13 +19,14 @@ internal const val CONFIGURATION_KSP = "ksp"
  * @author timo gruen - 2021-06-11
  */
 fun Project.setupDependencies(extension: ConnectorPluginExtension) {
-    val properties = extension.dependencyManagement
-    if (!properties.enabled) return
+    val properties = extension.getDependencyManagement()
+    val language = ProgrammingLanguage.byName(extension.language.getOrElse("kotlin"))
+    if (!properties.enabled.getOrElse(true)) return
     val dependencies = project.dependencies
     project.setupKsp(properties)
     dependencies.setupConnectorSdkDependencies(properties)
-    dependencies.setupPreciseDependencies(properties)
-    dependencies.setupCommonsConfigDependencies(properties)
+    dependencies.setupPreciseDependencies(language, properties)
+    dependencies.setupCommonsConfigDependencies(language, properties)
 }
 
 private fun Project.setupRepositories(properties: DependencyManagementProperties) {
@@ -40,17 +41,23 @@ private fun Project.setupKsp(properties: DependencyManagementProperties) {
     project.plugins.apply(KspGradleSubplugin::class.java)
 }
 
-private fun DependencyHandler.setupCommonsConfigDependencies(properties: DependencyManagementProperties) {
+private fun DependencyHandler.setupCommonsConfigDependencies(
+    language: ProgrammingLanguage,
+    properties: DependencyManagementProperties
+) {
     val version = properties.versionCommonsConfig
     add(CONFIGURATION_RUNTIME, "io.datalbry.commons:commons-config-api:$version")
-    when (properties.language) {
+    when (language) {
         ProgrammingLanguage.KOTLIN -> add(CONFIGURATION_KSP, "io.datalbry.commons:commons-config-processor-kotlin:$version")
     }
 }
 
-private fun DependencyHandler.setupPreciseDependencies(properties: DependencyManagementProperties) {
+private fun DependencyHandler.setupPreciseDependencies(
+    language: ProgrammingLanguage,
+    properties: DependencyManagementProperties
+) {
     val version = properties.versionPrecise
-    when (properties.language) {
+    when (language) {
         ProgrammingLanguage.KOTLIN -> add(CONFIGURATION_KSP, "io.datalbry.precise:precise-processor-kotlin:$version")
     }
 }

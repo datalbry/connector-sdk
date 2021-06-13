@@ -1,10 +1,12 @@
 package io.datalbry.connector.plugin.config
 
-class OidcProperties {
-    val baseUrl: String = TODO()
-    val realm: String = TODO()
-    val clientId: String = TODO()
-    val clientSecret: CharSequence = TODO()
-    val username: String = TODO()
-    val password: CharSequence = TODO()
+import org.gradle.api.provider.Property
+
+interface OidcProperties {
+    val baseUrl: Property<String>
+    val realm: Property<String>
+    val clientId: Property<String>
+    val clientSecret: Property<String>
+    val username: Property<String>
+    val password: Property<String>
 }

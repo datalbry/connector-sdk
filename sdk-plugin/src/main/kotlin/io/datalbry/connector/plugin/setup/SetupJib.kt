@@ -19,9 +19,9 @@ fun Project.setupJib(container: ContainerProperties) {
                 it.ports = listOf("8080")
             }
             to {
-                it.image = getImageName(container.repository,"${project.name}:${project.version}")
-                container.username.let { user -> it.auth.username = user }
-                container.password.let { pw -> it.auth.password = pw }
+                it.image = getImageName(container.repository.getOrElse("images.datalbry.io"),"${project.name}:${project.version}")
+                container.username.orNull.let { user -> it.auth.username = user }
+                container.password.orNull.let { pw -> it.auth.password = pw }
             }
         }
     }

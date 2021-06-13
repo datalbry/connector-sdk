@@ -1,5 +1,7 @@
 package io.datalbry.connector.plugin.config
 
+import org.gradle.api.provider.Property
+
 /**
  * Extension properties for the dependency management of the connector.
  *
@@ -20,10 +22,9 @@ package io.datalbry.connector.plugin.config
  *
  * @author timo gruen - 2021-06-11
  */
-class DependencyManagementProperties {
-    val enabled: Boolean = true
-    val language = ProgrammingLanguage.KOTLIN
-    val versionCommonsConfig = ""
-    val versionConnectorSdk = ""
-    val versionPrecise = ""
+interface DependencyManagementProperties {
+    val enabled: Property<Boolean>
+    val versionCommonsConfig: Property<String>
+    val versionConnectorSdk: Property<String>
+    val versionPrecise: Property<String>
 }

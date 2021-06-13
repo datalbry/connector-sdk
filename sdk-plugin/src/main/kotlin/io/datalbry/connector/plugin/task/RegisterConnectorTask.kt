@@ -46,7 +46,7 @@ class RegisterConnectorTask: DefaultTask() {
 
     private fun postConnectorToRegistry(connectorJson: String, accessToken: String) {
         val extension = project.extensions.getByType(ConnectorPluginExtension::class.java)
-        val baseUrl = extension.registry.baseUrl.prefixBaseNameIfNot("https://")
+        val baseUrl = extension.getRegistry().baseUrl.getOrElse("connectors.datalbry.io").prefixBaseNameIfNot("https://")
         val requestUrl = "$baseUrl/connector/registry"
 
         val post = HttpPost(requestUrl)
@@ -65,23 +65,23 @@ class RegisterConnectorTask: DefaultTask() {
         val root = json.nodeFactory.objectNode()
 
         val id = json.nodeFactory.objectNode()
-        id.put("name", extension.name)
-        id.put("version", extension.version)
+        id.put("name", extension.name.getOrElse(project.name))
+        id.put("version", extension.version.getOrElse(project.version as String))
 
         root.set<ObjectNode>("id", id)
 
         root.set<JsonNode>("docSchema", jacksonObjectMapper().readTree(docSchemaFile))
         root.set<JsonNode>("configSchema", jacksonObjectMapper().readTree(configSchemaFile))
 
-        root.put("image", "${extension.container.repository}/${extension.name}:${extension.version}")
+        root.put("image", "${extension.getContainer().repository.getOrElse("images.datalbry.io")}/${extension.name}:${extension.version}")
 
         return json.writeValueAsString(root)
     }
 
     private fun fetchOidcToken(): String {
         val extension = project.extensions.getByType(ConnectorPluginExtension::class.java)
-        val oidc = extension.oidc
-        val baseUrl = oidc.baseUrl.prefixBaseNameIfNot("https://")
+        val oidc = extension.getOidc()
+        val baseUrl = oidc.baseUrl.getOrElse("login.datalbry.io").prefixBaseNameIfNot("https://")
         val requestUrl = "$baseUrl/auth/realms/${oidc.realm}/protocol/openid-connect/token"
 
         val post = HttpPost(requestUrl)
@@ -95,11 +95,11 @@ class RegisterConnectorTask: DefaultTask() {
 
     private fun OidcProperties.createFormEntity(): UrlEncodedFormEntity {
         val formValues = listOf(
-            BasicNameValuePair("username", username),
-            BasicNameValuePair("password", password.toString()),
+            BasicNameValuePair("username", username.get()),
+            BasicNameValuePair("password", password.get()),
             BasicNameValuePair("grant_type", "password"),
-            BasicNameValuePair("client_id", clientId),
-            BasicNameValuePair("client_secret", clientSecret.toString())
+            BasicNameValuePair("client_id", clientId.getOrElse("datalbry")),
+            BasicNameValuePair("client_secret", clientSecret.get())
         )
 
         return UrlEncodedFormEntity(formValues, "UTF-8")
