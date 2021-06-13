@@ -3,9 +3,19 @@ package io.datalbry.connector.plugin.task
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import io.datalbry.connector.plugin.ConnectorPluginExtension
+import io.datalbry.connector.plugin.config.OidcProperties
+import org.apache.http.HttpEntity
+import org.apache.http.client.entity.UrlEncodedFormEntity
+import org.apache.http.client.methods.HttpPost
+import org.apache.http.entity.StringEntity
+import org.apache.http.impl.client.HttpClientBuilder
+import org.apache.http.message.BasicNameValuePair
+import org.apache.http.util.EntityUtils
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
+import org.jetbrains.kotlin.util.prefixBaseNameIfNot
 import java.io.File
 
 /**
@@ -20,6 +30,7 @@ import java.io.File
 class RegisterConnectorTask: DefaultTask() {
 
     private val json = jacksonObjectMapper()
+    private val http = HttpClientBuilder.create().build()
 
     init {
         val compileTask = project.task("compile")
@@ -28,13 +39,25 @@ class RegisterConnectorTask: DefaultTask() {
 
     @TaskAction
     fun publish() {
-        // 1. Create Connector (JSON)
         val connectorJson = buildConnectorJson()
-        // 2. Keycloak authenticate (exchange Token)
-        // 3. Post Connector (JSON) to Connector Registry (use Token)
+        val accessToken = fetchOidcToken()
+        postConnectorToRegistry(connectorJson, accessToken)
     }
 
-    private fun buildConnectorJson(): ObjectNode {
+    private fun postConnectorToRegistry(connectorJson: String, accessToken: String) {
+        val extension = project.extensions.getByType(ConnectorPluginExtension::class.java)
+        val baseUrl = extension.registry.baseUrl.prefixBaseNameIfNot("https://")
+        val requestUrl = "$baseUrl/connector/registry"
+
+        val post = HttpPost(requestUrl)
+        post.addHeader("Content-Type", "application/json")
+        post.addHeader("Authorization", "Bearer $accessToken")
+        post.entity = StringEntity(connectorJson)
+
+        http.execute(post)
+    }
+
+    private fun buildConnectorJson(): String {
         val extension = project.extensions.getByType(ConnectorPluginExtension::class.java)
         val docSchemaFile = File("${project.buildDir.absolutePath}/${extension.documentSchemaPath}")
         val configSchemaFile = File("${project.buildDir.absolutePath}/${extension.configSchemaPath}")
@@ -52,7 +75,33 @@ class RegisterConnectorTask: DefaultTask() {
 
         root.put("image", "${extension.container.repository}/${extension.name}:${extension.version}")
 
-        return root
+        return json.writeValueAsString(root)
     }
 
+    private fun fetchOidcToken(): String {
+        val extension = project.extensions.getByType(ConnectorPluginExtension::class.java)
+        val oidc = extension.oidc
+        val baseUrl = oidc.baseUrl.prefixBaseNameIfNot("https://")
+        val requestUrl = "$baseUrl/auth/realms/${oidc.realm}/protocol/openid-connect/token"
+
+        val post = HttpPost(requestUrl)
+        post.addHeader("Content-Type", "application/x-www-form-urlencoded")
+        post.entity = oidc.createFormEntity()
+
+        val response = http.execute(post)
+        val jsonResponse = EntityUtils.toString(response.entity)
+        return json.readTree(jsonResponse).get("access_token").asText()
+    }
+
+    private fun OidcProperties.createFormEntity(): UrlEncodedFormEntity {
+        val formValues = listOf(
+            BasicNameValuePair("username", username),
+            BasicNameValuePair("password", password.toString()),
+            BasicNameValuePair("grant_type", "password"),
+            BasicNameValuePair("client_id", clientId),
+            BasicNameValuePair("client_secret", clientSecret.toString())
+        )
+
+        return UrlEncodedFormEntity(formValues, "UTF-8")
+    }
 }

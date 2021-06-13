@@ -4,6 +4,15 @@ The Connector-SDK is primarily for DataLbry internal usage, nevertheless we are 
 
 ## Quickstart
 
+1. Add the plugin to your `build.gradle.kts`
+
+```kotlin
+plugins {
+    id("connector-sdk")
+}
+```
+
+
 ## Gradle Plugin
 
 ## Configuration
