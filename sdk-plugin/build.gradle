@@ -1,5 +1,6 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm'
+    id 'datalbry.kotlin'
+    id 'datalbry.publication'
     id 'java-gradle-plugin'
 }
 
