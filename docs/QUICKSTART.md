@@ -12,6 +12,9 @@ plugins {
 }
 ```
 
+2. Build the project `./gradlew build`
+3. Run the Tests `./gradlew test`
+
 
 ## Gradle Plugin
 

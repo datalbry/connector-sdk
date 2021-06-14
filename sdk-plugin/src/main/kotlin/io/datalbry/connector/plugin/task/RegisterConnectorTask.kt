@@ -47,7 +47,11 @@ class RegisterConnectorTask: DefaultTask() {
     private fun postConnectorToRegistry(connectorJson: String, accessToken: String) {
         val extension = project.extensions.getByType(ConnectorPluginExtension::class.java)
         val baseUrl = extension.getRegistry().baseUrl.getOrElse("connectors.datalbry.io").prefixBaseNameIfNot("https://")
-        val requestUrl = "$baseUrl/connector/registry"
+        var requestUrl = "$baseUrl/connector/registry"
+
+        if (snapshotEnabled(extension) && isSnapshotRelease(extension)) {
+            requestUrl += "\$namespace=snapshot"
+        }
 
         val post = HttpPost(requestUrl)
         post.addHeader("Content-Type", "application/json")
@@ -56,6 +60,12 @@ class RegisterConnectorTask: DefaultTask() {
 
         http.execute(post)
     }
+
+    private fun snapshotEnabled(extension: ConnectorPluginExtension) =
+        extension.getRegistry().snapshotReleaseEnabled.getOrElse(false)
+
+    private fun isSnapshotRelease(extension: ConnectorPluginExtension) =
+        extension.version.getOrElse(project.version as String).endsWith("-SNAPSHOT")
 
     private fun buildConnectorJson(): String {
         val extension = project.extensions.getByType(ConnectorPluginExtension::class.java)
