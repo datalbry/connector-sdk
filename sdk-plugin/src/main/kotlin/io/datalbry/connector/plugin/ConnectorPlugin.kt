@@ -3,6 +3,7 @@ package io.datalbry.connector.plugin
 import io.datalbry.connector.plugin.setup.setupDependencies
 import io.datalbry.connector.plugin.setup.setupLanguage
 import io.datalbry.connector.plugin.setup.setupSpringBoot
+import io.datalbry.connector.plugin.setup.setupTasks
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -13,6 +14,7 @@ class ConnectorPlugin: Plugin<Project> {
         project.setupLanguage(extension)
         project.setupDependencies(extension)
         project.setupSpringBoot(extension)
+        project.setupTasks(extension)
     }
 
     companion object {
