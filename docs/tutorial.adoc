@@ -1,7 +1,0 @@
-= DataLbry Connector SDK Overview
-
-==
-
-== Usage
-
-== Copyright
