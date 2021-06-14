@@ -19,7 +19,7 @@ internal const val CONFIGURATION_KSP = "ksp"
  * @author timo gruen - 2021-06-11
  */
 fun Project.setupDependencies(extension: ConnectorPluginExtension) {
-    val properties = extension.getDependencyManagement()
+    val properties = extension.getDependencyManagement().first()
     val language = ProgrammingLanguage.byName(extension.language.getOrElse("kotlin"))
     if (!properties.enabled.getOrElse(true)) return
     val dependencies = project.dependencies

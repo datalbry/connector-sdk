@@ -16,8 +16,8 @@ class ConnectorPluginTest {
 
     @BeforeEach
     fun setup() {
-        settingsFile = File(testProjectDir, "settings.gradle")
-        buildFile = File(testProjectDir, "build.gradle")
+        settingsFile = File(testProjectDir, "settings.gradle.kts")
+        buildFile = File(testProjectDir, "build.gradle.kts")
     }
 
     @Test

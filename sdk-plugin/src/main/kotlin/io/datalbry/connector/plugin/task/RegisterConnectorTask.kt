@@ -3,10 +3,9 @@ package io.datalbry.connector.plugin.task
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import io.datalbry.connector.plugin.ConnectorPluginExtension
+import io.datalbry.connector.plugin.config.ConnectorRegistryProperties
 import io.datalbry.connector.plugin.config.OidcProperties
-import org.apache.http.HttpEntity
 import org.apache.http.client.entity.UrlEncodedFormEntity
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.StringEntity
@@ -46,10 +45,11 @@ class RegisterConnectorTask: DefaultTask() {
 
     private fun postConnectorToRegistry(connectorJson: String, accessToken: String) {
         val extension = project.extensions.getByType(ConnectorPluginExtension::class.java)
-        val baseUrl = extension.getRegistry().baseUrl.getOrElse("connectors.datalbry.io").prefixBaseNameIfNot("https://")
+        val registry = extension.getRegistry().first()
+        val baseUrl = registry.baseUrl.getOrElse("connectors.datalbry.io").prefixBaseNameIfNot("https://")
         var requestUrl = "$baseUrl/connector/registry"
 
-        if (snapshotEnabled(extension) && isSnapshotRelease(extension)) {
+        if (snapshotEnabled(registry) && isSnapshotRelease(extension)) {
             requestUrl += "\$namespace=snapshot"
         }
 
@@ -61,14 +61,15 @@ class RegisterConnectorTask: DefaultTask() {
         http.execute(post)
     }
 
-    private fun snapshotEnabled(extension: ConnectorPluginExtension) =
-        extension.getRegistry().snapshotReleaseEnabled.getOrElse(false)
+    private fun snapshotEnabled(registry: ConnectorRegistryProperties) =
+        registry.snapshotReleaseEnabled.getOrElse(false)
 
     private fun isSnapshotRelease(extension: ConnectorPluginExtension) =
         extension.version.getOrElse(project.version as String).endsWith("-SNAPSHOT")
 
     private fun buildConnectorJson(): String {
         val extension = project.extensions.getByType(ConnectorPluginExtension::class.java)
+        val container = extension.getContainer().first()
         val docSchemaFile = File("${project.buildDir.absolutePath}/${extension.documentSchemaPath}")
         val configSchemaFile = File("${project.buildDir.absolutePath}/${extension.configSchemaPath}")
 
@@ -83,14 +84,14 @@ class RegisterConnectorTask: DefaultTask() {
         root.set<JsonNode>("docSchema", jacksonObjectMapper().readTree(docSchemaFile))
         root.set<JsonNode>("configSchema", jacksonObjectMapper().readTree(configSchemaFile))
 
-        root.put("image", "${extension.getContainer().repository.getOrElse("images.datalbry.io")}/${extension.name}:${extension.version}")
+        root.put("image", "${container.repository.getOrElse("images.datalbry.io")}/${extension.name}:${extension.version}")
 
         return json.writeValueAsString(root)
     }
 
     private fun fetchOidcToken(): String {
         val extension = project.extensions.getByType(ConnectorPluginExtension::class.java)
-        val oidc = extension.getOidc()
+        val oidc = extension.getOidc().first()
         val baseUrl = oidc.baseUrl.getOrElse("login.datalbry.io").prefixBaseNameIfNot("https://")
         val requestUrl = "$baseUrl/auth/realms/${oidc.realm}/protocol/openid-connect/token"
 

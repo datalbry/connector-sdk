@@ -21,9 +21,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 fun Project.setupLanguage(extension: ConnectorPluginExtension) {
     // FIXME: Check how to pass the arguments, without building a complex,
     //        implicit dependency between the different configurations
-    setupJvm(extension.getKotlin())
+    val kotlin = extension.getKotlin().first()
+    setupJvm(kotlin)
     when (ProgrammingLanguage.byName(extension.language.getOrElse("kotlin"))) {
-        KOTLIN -> setupKotlin(extension.getKotlin())
+        KOTLIN -> setupKotlin(kotlin)
     }
 }
 
