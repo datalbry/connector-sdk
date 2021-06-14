@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.util.suffixIfNot
-
 plugins {
     id("maven-publish")
     id("signing")
