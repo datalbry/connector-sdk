@@ -1,7 +1,9 @@
 package io.datalbry.connector.plugin.setup
 
 import com.google.cloud.tools.jib.gradle.JibExtension
+import com.google.cloud.tools.jib.gradle.JibPlugin
 import io.datalbry.connector.plugin.extensions.ContainerExtension
+import io.datalbry.connector.plugin.util.enablePlugin
 import org.gradle.api.Project
 
 /**
@@ -12,6 +14,7 @@ import org.gradle.api.Project
  * @author timo gruen - 2021-06-11
  */
 fun Project.setupJib(container: ContainerExtension) {
+    enablePlugin<JibPlugin>()
     afterEvaluate {
         val jib = project.extensions.getByType(JibExtension::class.java)
         with(jib) {

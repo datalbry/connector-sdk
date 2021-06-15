@@ -4,8 +4,11 @@ import io.datalbry.connector.plugin.ConnectorPluginExtension
 import io.datalbry.connector.plugin.extensions.KotlinExtension
 import io.datalbry.connector.plugin.extensions.ProgrammingLanguage
 import io.datalbry.connector.plugin.extensions.ProgrammingLanguage.KOTLIN
+import io.datalbry.connector.plugin.util.enablePlugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.dsl.DependencyHandler
+import org.gradle.api.plugins.JavaLibraryPlugin
+import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.tasks.compile.JavaCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -19,30 +22,28 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
  * @author timo gruen - 2021-06-11
  */
 fun Project.setupLanguage(extension: ConnectorPluginExtension) {
-    // FIXME: Check how to pass the arguments, without building a complex,
-    //        implicit dependency between the different configurations
     val kotlin = extension.kotlin
-    setupJvm(kotlin)
+    project.setupJavaPlugin()
+    project.setupJvm(kotlin)
     when (ProgrammingLanguage.byName(extension.language)) {
         KOTLIN -> setupKotlin(kotlin)
     }
 }
 
 private fun Project.setupJvm(kotlin: KotlinExtension) {
-    project.setupJavaPlugin()
     project.configureJavaCompile(kotlin)
     project.configureJavaPlugin()
 }
 
 private fun Project.setupKotlin(kotlin: KotlinExtension) {
+    enablePlugin("org.jetbrains.kotlin.jvm")
     project.dependencies.setupKotlinDependencies(kotlin.version)
     project.configureKotlinCompile(kotlin)
 }
 
 private fun Project.setupJavaPlugin() {
-    if (!project.plugins.hasPlugin("java")) {
-        project.plugins.apply("java")
-    }
+    enablePlugin<JavaPlugin>()
+    enablePlugin<JavaLibraryPlugin>()
 }
 
 private fun DependencyHandler.setupKotlinDependencies(version: String) {

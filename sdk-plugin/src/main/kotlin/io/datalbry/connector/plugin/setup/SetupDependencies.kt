@@ -23,6 +23,7 @@ fun Project.setupDependencies(extension: ConnectorPluginExtension) {
     val language = ProgrammingLanguage.byName(extension.language)
     if (!properties.enabled) return
     val dependencies = project.dependencies
+    project.setupRepositories(properties)
     project.setupKsp(properties)
     dependencies.setupConnectorSdkDependencies(properties)
     dependencies.setupPreciseDependencies(language, properties)
