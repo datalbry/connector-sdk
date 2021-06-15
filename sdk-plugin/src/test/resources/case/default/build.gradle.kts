@@ -2,7 +2,7 @@ import org.gradle.api.Task
 import org.gradle.api.tasks.WriteProperties
 import io.datalbry.connector.plugin.ConnectorPluginExtension
 
-plugins{
+plugins {
     id("io.datalbry.connector.sdk")
 }
 

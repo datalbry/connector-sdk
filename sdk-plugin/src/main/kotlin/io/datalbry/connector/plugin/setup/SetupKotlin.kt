@@ -1,9 +1,9 @@
 package io.datalbry.connector.plugin.setup
 
 import io.datalbry.connector.plugin.ConnectorPluginExtension
-import io.datalbry.connector.plugin.config.KotlinProperties
-import io.datalbry.connector.plugin.config.ProgrammingLanguage
-import io.datalbry.connector.plugin.config.ProgrammingLanguage.KOTLIN
+import io.datalbry.connector.plugin.extensions.KotlinExtension
+import io.datalbry.connector.plugin.extensions.ProgrammingLanguage
+import io.datalbry.connector.plugin.extensions.ProgrammingLanguage.KOTLIN
 import org.gradle.api.Project
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.plugins.JavaPluginExtension
@@ -21,21 +21,28 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 fun Project.setupLanguage(extension: ConnectorPluginExtension) {
     // FIXME: Check how to pass the arguments, without building a complex,
     //        implicit dependency between the different configurations
-    val kotlin = extension.getKotlin().first()
+    val kotlin = extension.kotlin
     setupJvm(kotlin)
-    when (ProgrammingLanguage.byName(extension.language.getOrElse("kotlin"))) {
+    when (ProgrammingLanguage.byName(extension.language)) {
         KOTLIN -> setupKotlin(kotlin)
     }
 }
 
-private fun Project.setupJvm(kotlin: KotlinProperties) {
-    project.setupJavaCompile(kotlin)
+private fun Project.setupJvm(kotlin: KotlinExtension) {
     project.setupJavaPlugin()
+    project.configureJavaCompile(kotlin)
+    project.configureJavaPlugin()
 }
 
-private fun Project.setupKotlin(kotlin: KotlinProperties) {
-    project.dependencies.setupKotlinDependencies(kotlin.version.getOrElse(""))
-    project.setupKotlinCompile(kotlin)
+private fun Project.setupKotlin(kotlin: KotlinExtension) {
+    project.dependencies.setupKotlinDependencies(kotlin.version)
+    project.configureKotlinCompile(kotlin)
+}
+
+private fun Project.setupJavaPlugin() {
+    if (!project.plugins.hasPlugin("java")) {
+        project.plugins.apply("java")
+    }
 }
 
 private fun DependencyHandler.setupKotlinDependencies(version: String) {
@@ -43,26 +50,26 @@ private fun DependencyHandler.setupKotlinDependencies(version: String) {
     add(CONFIGURATION_IMPLEMENTATION, "org.jetbrains.kotlin:kotlin-stdlib:$version")
 }
 
-private fun Project.setupKotlinCompile(kotlin: KotlinProperties) {
+private fun Project.configureKotlinCompile(kotlin: KotlinExtension) {
     tasks.withType(KotlinCompile::class.java) {
         with(it.kotlinOptions) {
             this.freeCompilerArgs = listOf("-Xjsr305=strict")
-            this.jvmTarget = kotlin.targetCompatibility.getOrElse("1.8")
+            this.jvmTarget = kotlin.targetCompatibility
         }
     }
 }
 
-private fun Project.setupJavaPlugin() {
+private fun Project.configureJavaPlugin() {
     with(project.extensions.getByType(JavaPluginExtension::class.java)) {
         withJavadocJar()
         withSourcesJar()
     }
 }
 
-private fun Project.setupJavaCompile(kotlin: KotlinProperties) {
+private fun Project.configureJavaCompile(kotlin: KotlinExtension) {
     tasks.withType(JavaCompile::class.java) {
-        it.sourceCompatibility = kotlin.sourceCompatibility.getOrElse("1.8")
-        it.targetCompatibility = kotlin.targetCompatibility.getOrElse("1.8")
+        it.sourceCompatibility = kotlin.sourceCompatibility
+        it.targetCompatibility = kotlin.targetCompatibility
     }
 }
 

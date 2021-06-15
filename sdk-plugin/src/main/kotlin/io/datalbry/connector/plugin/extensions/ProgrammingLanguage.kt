@@ -1,4 +1,4 @@
-package io.datalbry.connector.plugin.config
+package io.datalbry.connector.plugin.extensions
 
 enum class ProgrammingLanguage {
     KOTLIN;

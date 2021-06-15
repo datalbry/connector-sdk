@@ -1,6 +1,4 @@
-package io.datalbry.connector.plugin.config
-
-import org.gradle.api.provider.Property
+package io.datalbry.connector.plugin.extensions
 
 /**
  * Extension properties for the dependency management of the connector.
@@ -18,17 +16,9 @@ import org.gradle.api.provider.Property
  *
  * @author timo gruen - 2021-06-11
  */
-@Suppress("LeakingThis")
-abstract class DependencyManagementExtension {
-    abstract var enabled: Property<Boolean>
-    abstract var versionCommonsConfig: Property<String>
-    abstract var versionConnectorSdk: Property<String>
-    abstract var versionPrecise: Property<String>
-
-    init {
-        enabled.convention(true)
-        versionCommonsConfig.convention("")
-        versionConnectorSdk.convention("")
-        versionPrecise.convention("")
-    }
+class DependencyManagementExtension {
+    var enabled: Boolean = true
+    var versionCommonsConfig: String = ""
+    var versionConnectorSdk: String = ""
+    var versionPrecise: String = ""
 }

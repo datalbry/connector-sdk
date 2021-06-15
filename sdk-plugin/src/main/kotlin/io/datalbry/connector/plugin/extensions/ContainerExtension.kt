@@ -1,16 +1,8 @@
-package io.datalbry.connector.plugin.config
+package io.datalbry.connector.plugin.extensions
 
-import org.gradle.api.provider.Property
-
-@Suppress("LeakingThis")
-abstract class ContainerExtension {
-    abstract var enabled: Property<Boolean>
-    abstract var repository: Property<String>
-    abstract var username: Property<String>
-    abstract var password: Property<String>
-
-    init {
-        enabled.convention(true)
-        repository.convention("")
-    }
+class ContainerExtension {
+    var enabled: Boolean = true
+    var repository: String = "images.datalbry.io"
+    var username: String? = null
+    var password: String? = null
 }

@@ -1,14 +1,6 @@
-package io.datalbry.connector.plugin.config
+package io.datalbry.connector.plugin.extensions
 
-import org.gradle.api.provider.Property
-
-@Suppress("LeakingThis")
-abstract class ConnectorRegistryExtension {
-    abstract var baseUrl: Property<String>
-    abstract var snapshotReleaseEnabled: Property<Boolean>
-
-    init {
-        baseUrl.convention("")
-        snapshotReleaseEnabled.convention(true)
-    }
+class ConnectorRegistryExtension {
+    var baseUrl: String = "connectors.datalbry.io"
+    var snapshotReleaseEnabled: Boolean = true
 }
