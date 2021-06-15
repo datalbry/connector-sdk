@@ -6,7 +6,7 @@ enum class ProgrammingLanguage {
     companion object {
         fun byName(name: String): ProgrammingLanguage {
             when (name.toLowerCase()) {
-                "kotlin" -> return ProgrammingLanguage.KOTLIN
+                "kotlin" -> return KOTLIN
                 else -> throw IllegalArgumentException("No such Programming language as part of the enum")
             }
         }
