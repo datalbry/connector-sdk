@@ -10,11 +10,16 @@ import org.gradle.api.Project
 class ConnectorPlugin: Plugin<Project> {
 
     override fun apply(project: Project) {
-        val extension = project.extensions.create(EXTENSION_NAME, ConnectorPluginExtension::class.java, project)
+        val extension = setupExtensions(project)
         project.setupLanguage(extension)
         project.setupDependencies(extension)
         project.setupSpringBoot(extension)
         project.setupTasks(extension)
+    }
+
+    private fun setupExtensions(project: Project): ConnectorPluginExtension {
+        val extension = project.extensions.create(EXTENSION_NAME, ConnectorPluginExtension::class.java, project)
+        return extension
     }
 
     companion object {

@@ -1,37 +1,47 @@
 package io.datalbry.connector.plugin
 
-import io.datalbry.connector.plugin.config.*
+import io.datalbry.connector.plugin.extensions.*
 import org.gradle.api.Action
 import org.gradle.api.Project
-import org.gradle.api.provider.Property
-import org.gradle.api.tasks.Nested
 import javax.inject.Inject
 
-interface ConnectorPluginExtension {
-    var name: Property<String>
-    var group: Property<String>
-    var version: Property<String>
-    var language: Property<String>
-    var configSchemaPath: Property<String>
-    var documentSchemaPath: Property<String>
+abstract class ConnectorPluginExtension @Inject constructor(private val project: Project) {
 
-    @Nested
-    fun getOidc(): OidcProperties
-    fun oidc(action: Action<in OidcProperties>)
+    var name: String? = null
+        get() = field ?: project.name
 
-    @Nested
-    fun getContainer(): ContainerProperties
-    fun container(action: Action<in ContainerProperties>)
+    var group: String? = null
+        get() = field ?: project.group as String
 
-    @Nested
-    fun getRegistry(): ConnectorRegistryProperties
-    fun registry(action: Action<in ConnectorRegistryProperties>)
+    var version: String? = null
+        get() = field ?: project.version as String
 
-    @Nested
-    fun getKotlin(): KotlinProperties
-    fun kotlin(action: Action<in KotlinProperties>)
+    var language: String = "kotlin"
+    var configSchemaPath: String = "resources/main/META-INF/datalbry/schema.json"
+    var documentSchemaPath: String = "resources/main/META-INF/datalbry/schema-config.json"
 
-    @Nested
-    fun getDependencyManagement(): DependencyManagementProperties
-    fun dependencyManagement(action: Action<in DependencyManagementProperties>)
+    var oidc: OidcExtension = OidcExtension()
+    fun oidc(config: Action<in OidcExtension>) {
+        config.execute(oidc)
+    }
+
+    var registry: ConnectorRegistryExtension = ConnectorRegistryExtension()
+    fun registry(config: Action<in ConnectorRegistryExtension>) {
+        config.execute(registry)
+    }
+
+    var container: ContainerExtension = ContainerExtension()
+    fun container(config: Action<in ContainerExtension>) {
+        config.execute(container)
+    }
+
+    var dependencies: DependencyManagementExtension = DependencyManagementExtension()
+    fun dependencies(config: Action<in DependencyManagementExtension>) {
+        config.execute(dependencies)
+    }
+
+    var kotlin: KotlinExtension = KotlinExtension()
+    fun kotlin(config: Action<in KotlinExtension>) {
+        config.execute(kotlin)
+    }
 }

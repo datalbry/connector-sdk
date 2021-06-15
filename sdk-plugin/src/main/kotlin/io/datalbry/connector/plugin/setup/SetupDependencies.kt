@@ -2,8 +2,8 @@ package io.datalbry.connector.plugin.setup
 
 import com.google.devtools.ksp.gradle.KspGradleSubplugin
 import io.datalbry.connector.plugin.ConnectorPluginExtension
-import io.datalbry.connector.plugin.config.DependencyManagementProperties
-import io.datalbry.connector.plugin.config.ProgrammingLanguage
+import io.datalbry.connector.plugin.extensions.DependencyManagementExtension
+import io.datalbry.connector.plugin.extensions.ProgrammingLanguage
 import org.gradle.api.Project
 import org.gradle.api.artifacts.dsl.DependencyHandler
 
@@ -19,33 +19,34 @@ internal const val CONFIGURATION_KSP = "ksp"
  * @author timo gruen - 2021-06-11
  */
 fun Project.setupDependencies(extension: ConnectorPluginExtension) {
-    val properties = extension.getDependencyManagement()
-    val language = ProgrammingLanguage.byName(extension.language.getOrElse("kotlin"))
-    if (!properties.enabled.getOrElse(true)) return
+    val properties = extension.dependencies
+    val language = ProgrammingLanguage.byName(extension.language)
+    if (!properties.enabled) return
     val dependencies = project.dependencies
+    project.setupRepositories(properties)
     project.setupKsp(properties)
     dependencies.setupConnectorSdkDependencies(properties)
     dependencies.setupPreciseDependencies(language, properties)
     dependencies.setupCommonsConfigDependencies(language, properties)
 }
 
-private fun Project.setupRepositories(properties: DependencyManagementProperties) {
+private fun Project.setupRepositories(extension: DependencyManagementExtension) {
     with(project.repositories) {
         google()
         mavenCentral()
     }
 }
 
-private fun Project.setupKsp(properties: DependencyManagementProperties) {
+private fun Project.setupKsp(extension: DependencyManagementExtension) {
     if (project.plugins.hasPlugin(KspGradleSubplugin.KSP_PLUGIN_ID)) return
     project.plugins.apply(KspGradleSubplugin::class.java)
 }
 
 private fun DependencyHandler.setupCommonsConfigDependencies(
     language: ProgrammingLanguage,
-    properties: DependencyManagementProperties
+    extension: DependencyManagementExtension
 ) {
-    val version = properties.versionCommonsConfig
+    val version = extension.versionCommonsConfig
     add(CONFIGURATION_RUNTIME, "io.datalbry.commons:commons-config-api:$version")
     when (language) {
         ProgrammingLanguage.KOTLIN -> add(CONFIGURATION_KSP, "io.datalbry.commons:commons-config-processor-kotlin:$version")
@@ -54,16 +55,16 @@ private fun DependencyHandler.setupCommonsConfigDependencies(
 
 private fun DependencyHandler.setupPreciseDependencies(
     language: ProgrammingLanguage,
-    properties: DependencyManagementProperties
+    extension: DependencyManagementExtension
 ) {
-    val version = properties.versionPrecise
+    val version = extension.versionPrecise
     when (language) {
         ProgrammingLanguage.KOTLIN -> add(CONFIGURATION_KSP, "io.datalbry.precise:precise-processor-kotlin:$version")
     }
 }
 
-private fun DependencyHandler.setupConnectorSdkDependencies(properties: DependencyManagementProperties) {
-    val version = properties.versionConnectorSdk
+private fun DependencyHandler.setupConnectorSdkDependencies(extension: DependencyManagementExtension) {
+    val version = extension.versionConnectorSdk
     add(CONFIGURATION_RUNTIME, "io.datalbry.connector:connector-sdk-api:$version")
     add(CONFIGURATION_RUNTIME, "io.datalbry.connector:connector-sdk-autoconfigure:$version")
     add(CONFIGURATION_IMPLEMENTATION, "io.datalbry.connector:connector-sdk-api:$version")
