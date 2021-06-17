@@ -102,6 +102,7 @@ jobs:
         with:
           arguments: >
             publishMavenPublicationToSonatypeRepository
+            closeAndReleaseSonatypeStagingRepository
             -PprojectVersion=${{ github.event.inputs.version }}
             -PsonatypeUsername=${{ secrets.MAVENCENTRALUSERNAME }}
             -PsonatypePassword=${{ secrets.MAVENCENTRALPASSWORD }}
