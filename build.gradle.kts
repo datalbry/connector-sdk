@@ -12,5 +12,3 @@ subprojects {
 }
 
 group = "io.datalbry.connector"
-
-

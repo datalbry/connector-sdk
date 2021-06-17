@@ -3,6 +3,7 @@ package io.datalbry.connector.plugin.setup
 import io.datalbry.connector.plugin.ConnectorPluginExtension
 import io.spring.gradle.dependencymanagement.DependencyManagementPlugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
@@ -14,6 +15,7 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 fun Project.setupSpringBoot(extension: ConnectorPluginExtension) {
     plugins.apply(SpringBootPlugin::class.java)
     plugins.apply(DependencyManagementPlugin::class.java)
+    dependencies.setupSpringDependencies()
 
     with (tasks.getByName("bootJar")) {
         this as BootJar
@@ -28,4 +30,8 @@ fun Project.setupSpringBoot(extension: ConnectorPluginExtension) {
             )
         }
     }
+}
+
+private fun DependencyHandler.setupSpringDependencies() {
+    add(CONFIGURATION_COMPILE, "org.springframework.boot:spring-boot-starter")
 }
