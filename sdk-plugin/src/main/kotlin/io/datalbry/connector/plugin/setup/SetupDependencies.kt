@@ -7,6 +7,7 @@ import io.datalbry.connector.plugin.extensions.ProgrammingLanguage
 import org.gradle.api.Project
 import org.gradle.api.artifacts.dsl.DependencyHandler
 
+internal const val CONFIGURATION_COMPILE = "compileOnly"
 internal const val CONFIGURATION_RUNTIME = "runtimeOnly"
 internal const val CONFIGURATION_IMPLEMENTATION = "implementation"
 internal const val CONFIGURATION_TEST_RUNTIME = "testRuntimeOnly"
@@ -70,4 +71,3 @@ private fun DependencyHandler.setupConnectorSdkDependencies(extension: Dependenc
     add(CONFIGURATION_IMPLEMENTATION, "io.datalbry.connector:connector-sdk-api:$version")
     add(CONFIGURATION_TEST_IMPLEMENTATION, "io.datalbry.connector:connector-sdk-test:$version")
 }
-

@@ -8,15 +8,33 @@ The Connector-SDK is primarily for DataLbry internal usage, nevertheless we are 
 
 ```kotlin
 plugins {
-    id("connector-sdk")
+    id("io.datalbry.connector.sdk") version "0.0.17"
 }
 ```
 
-2. Build the project `./gradlew build`
-3. Run the Tests `./gradlew test`
+2. Add the following snippet to your `settings.gradle.kts`
+```kotlin
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        google()
+    }
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id == "io.datalbry.connector.sdk") {
+                useModule("io.datalbry.connector:connector-sdk-plugin:${requested.version}")
+            }
+        }
+    }
+}
+```
 
+3.
 
 ## Gradle Plugin
+The Connector-SDK provides a convenience plugin for JVM based builds. 
+We developed the Connector-SDK Gradle Plugin to help developer easily bootstrap the setup process of the connector repository.
 
 ## Configuration
 

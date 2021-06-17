@@ -53,4 +53,3 @@ fun MavenPublication.publication() {
     version = projectVersion
     from(components["java"])
 }
-
