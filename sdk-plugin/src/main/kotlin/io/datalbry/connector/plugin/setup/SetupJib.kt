@@ -5,6 +5,8 @@ import com.google.cloud.tools.jib.gradle.JibPlugin
 import io.datalbry.connector.plugin.ConnectorPluginExtension
 import io.datalbry.connector.plugin.extensions.ContainerExtension
 import io.datalbry.connector.plugin.util.enablePlugin
+import io.datalbry.connector.sdk.ConnectorApplication
+import io.datalbry.connector.sdk.main
 import org.gradle.api.Project
 
 /**
@@ -21,6 +23,7 @@ fun Project.setupJib(extension: ConnectorPluginExtension) {
         val jib = project.extensions.getByType(JibExtension::class.java)
         with(jib) {
             container {
+                it.mainClass = ConnectorApplication::class.qualifiedName!!
                 it.ports = listOf("8080")
             }
             to {
