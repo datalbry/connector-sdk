@@ -19,6 +19,6 @@ package io.datalbry.connector.plugin.extensions
 class DependencyManagementExtension {
     var enabled: Boolean = true
     var versionCommonsConfig: String = "0.0.1"
-    var versionConnectorSdk: String = "0.0.15"
+    var versionConnectorSdk: String = "0.0.20"
     var versionPrecise: String = "0.0.7"
 }
