@@ -16,7 +16,6 @@ dependencies {
     testRuntime(libs.junit.jupiter.core)
     testRuntime(libs.junit.jupiter.engine)
 
-    implementation(project(":sdk"))
     implementation("org.apache.httpcomponents:httpclient:4.5.13")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.12.3")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.3")

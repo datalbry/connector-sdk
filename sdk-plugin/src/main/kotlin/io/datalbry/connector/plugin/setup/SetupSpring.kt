@@ -19,7 +19,7 @@ fun Project.setupSpringBoot(extension: ConnectorPluginExtension) {
 
     with (tasks.getByName("bootJar")) {
         this as BootJar
-        mainClassName = "io.lbrary.es.connector.sdk.ConnectorApplicationKt"
+        mainClassName = "io.datalbry.connector.sdk.ConnectorApplicationKt"
         manifest {
             it.attributes(
                 mapOf(

@@ -66,7 +66,7 @@ private fun DependencyHandler.setupPreciseDependencies(
 
 private fun DependencyHandler.setupConnectorSdkDependencies(extension: DependencyManagementExtension) {
     val version = extension.versionConnectorSdk
-    add(CONFIGURATION_RUNTIME, "io.datalbry.connector:connector-sdk-api:$version")
+    add(CONFIGURATION_RUNTIME, "io.datalbry.connector:connector-sdk:$version")
     add(CONFIGURATION_RUNTIME, "io.datalbry.connector:connector-sdk-autoconfigure:$version")
     add(CONFIGURATION_IMPLEMENTATION, "io.datalbry.connector:connector-sdk-api:$version")
     add(CONFIGURATION_TEST_IMPLEMENTATION, "io.datalbry.connector:connector-sdk-test:$version")
