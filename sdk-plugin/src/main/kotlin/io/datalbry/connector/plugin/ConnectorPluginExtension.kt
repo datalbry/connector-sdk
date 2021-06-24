@@ -20,7 +20,7 @@ abstract class ConnectorPluginExtension @Inject constructor(private val project:
     var configSchemaPath: String = "resources/main/META-INF/datalbry/schema.json"
     var documentSchemaPath: String = "resources/main/META-INF/datalbry/schema-config.json"
 
-    var oidc: OidcExtension = OidcExtension()
+    var oidc: OidcExtension = OidcExtension(project)
     fun oidc(config: Action<in OidcExtension>) {
         config.execute(oidc)
     }
@@ -30,7 +30,7 @@ abstract class ConnectorPluginExtension @Inject constructor(private val project:
         config.execute(registry)
     }
 
-    var container: ContainerExtension = ContainerExtension()
+    var container: ContainerExtension = ContainerExtension(project)
     fun container(config: Action<in ContainerExtension>) {
         config.execute(container)
     }
