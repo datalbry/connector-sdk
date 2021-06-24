@@ -16,19 +16,23 @@ class ConnectorPluginTest {
     @TempDir lateinit var testProjectDir: File
     private lateinit var settingsFile: File
     private lateinit var buildFile: File
+    private lateinit var propertiesFile: File
 
     @BeforeEach
     fun setup() {
         settingsFile = File(testProjectDir, "settings.gradle.kts")
         buildFile = File(testProjectDir, "build.gradle.kts")
+        propertiesFile = File(testProjectDir, "gradle.properties")
     }
 
     @Test
     fun `assert extension update is being respected`() {
         val buildGradle = ConnectorPluginTest::class.java.getResourceAsStream("/case/override/build.gradle.kts")
         val settingsGradle = ConnectorPluginTest::class.java.getResourceAsStream("/case/override/settings.gradle.kts")
+        val gradleProperties = ConnectorPluginTest::class.java.getResourceAsStream("/case/override/gradle.properties")
         FileUtils.copyInputStreamToFile(settingsGradle, settingsFile)
         FileUtils.copyInputStreamToFile(buildGradle, buildFile)
+        FileUtils.copyInputStreamToFile(gradleProperties, propertiesFile)
 
         val result = GradleRunner
             .create()
@@ -44,8 +48,10 @@ class ConnectorPluginTest {
     fun `assert extension default is being respected`() {
         val buildGradle = ConnectorPluginTest::class.java.getResourceAsStream("/case/default/build.gradle.kts")
         val settingsGradle = ConnectorPluginTest::class.java.getResourceAsStream("/case/default/settings.gradle.kts")
+        val gradleProperties = ConnectorPluginTest::class.java.getResourceAsStream("/case/default/gradle.properties")
         FileUtils.copyInputStreamToFile(settingsGradle, settingsFile)
         FileUtils.copyInputStreamToFile(buildGradle, buildFile)
+        FileUtils.copyInputStreamToFile(gradleProperties, propertiesFile)
 
         val result = GradleRunner
             .create()
