@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.datalbry.connector.plugin.ConnectorPluginExtension
 import io.datalbry.connector.plugin.extensions.ConnectorRegistryExtension
-import io.datalbry.connector.plugin.extensions.ContainerExtension
 import io.datalbry.connector.plugin.extensions.OidcExtension
 import org.apache.http.client.entity.UrlEncodedFormEntity
 import org.apache.http.client.methods.HttpPost
@@ -15,7 +14,7 @@ import org.apache.http.message.BasicNameValuePair
 import org.apache.http.util.EntityUtils
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
-import org.jetbrains.kotlin.util.prefixBaseNameIfNot
+import org.jetbrains.kotlin.util.prefixIfNot
 import java.io.File
 
 /**
@@ -47,7 +46,7 @@ open class RegisterConnectorTask: DefaultTask() {
     private fun postConnectorToRegistry(connectorJson: String, accessToken: String) {
         val extension = project.extensions.getByType(ConnectorPluginExtension::class.java)
         val registry = extension.registry
-        val baseUrl = registry.baseUrl.prefixBaseNameIfNot("https://")
+        val baseUrl = registry.baseUrl.prefixIfNot("https://")
         var requestUrl = "$baseUrl/connector/registry"
 
         if (snapshotEnabled(registry) && isSnapshotRelease(extension)) {
@@ -93,7 +92,7 @@ open class RegisterConnectorTask: DefaultTask() {
     private fun fetchOidcToken(): String {
         val extension = project.extensions.getByType(ConnectorPluginExtension::class.java)
         val oidc = extension.oidc
-        val baseUrl = oidc.baseUrl.prefixBaseNameIfNot("https://")
+        val baseUrl = oidc.baseUrl.prefixIfNot("https://")
         val requestUrl = "$baseUrl/auth/realms/${oidc.realm}/protocol/openid-connect/token"
 
         val post = HttpPost(requestUrl)
