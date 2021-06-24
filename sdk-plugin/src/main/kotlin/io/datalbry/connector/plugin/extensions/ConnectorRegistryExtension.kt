@@ -1,6 +1,9 @@
 package io.datalbry.connector.plugin.extensions
 
-class ConnectorRegistryExtension {
-    var baseUrl: String = "connectors.datalbry.io"
-    var snapshotReleaseEnabled: Boolean = true
+import io.datalbry.connector.plugin.util.propertyOrDefault
+import org.gradle.api.Project
+
+class ConnectorRegistryExtension(project: Project) {
+    var baseUrl: String = project.propertyOrDefault("connector.registry.baseUrl","connectors.datalbry.io")
+    var snapshotReleaseEnabled: Boolean = project.propertyOrDefault("connector.registry.snapshotReleaseEnabled",true)
 }

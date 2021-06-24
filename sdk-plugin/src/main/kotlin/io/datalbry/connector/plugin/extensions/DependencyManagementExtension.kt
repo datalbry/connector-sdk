@@ -1,5 +1,8 @@
 package io.datalbry.connector.plugin.extensions
 
+import io.datalbry.connector.plugin.util.propertyOrDefault
+import org.gradle.api.Project
+
 /**
  * Extension properties for the dependency management of the connector.
  *
@@ -16,9 +19,9 @@ package io.datalbry.connector.plugin.extensions
  *
  * @author timo gruen - 2021-06-11
  */
-class DependencyManagementExtension {
-    var enabled: Boolean = true
-    var versionCommonsConfig: String = "0.0.1"
-    var versionConnectorSdk: String = "0.0.20"
-    var versionPrecise: String = "0.0.7"
+class DependencyManagementExtension(project: Project) {
+    var enabled: Boolean = project.propertyOrDefault("connector.dependencies.enabled", true)
+    var versionCommonsConfig: String = project.propertyOrDefault("connector.dependencies.versionCommonsConfig", "0.0.1")
+    var versionConnectorSdk: String = project.propertyOrDefault("connector.dependencies.versionConnectorSdk", "0.0.20")
+    var versionPrecise: String = project.propertyOrDefault("connector.dependencies.versionPrecise", "0.0.7")
 }

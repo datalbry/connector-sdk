@@ -14,3 +14,11 @@ fun Project.enablePlugin(id: String) {
         project.plugins.apply(id)
     }
 }
+
+inline fun <reified Type> Project.propertyOrNull(key: String): Type? {
+    return property(key) as Type?
+}
+
+inline fun <reified Type> Project.propertyOrDefault(key: String, default: Type): Type {
+    return property(key) as Type? ?: default
+}

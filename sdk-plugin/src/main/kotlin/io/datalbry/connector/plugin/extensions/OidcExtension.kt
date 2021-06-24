@@ -1,15 +1,14 @@
 package io.datalbry.connector.plugin.extensions
 
+import io.datalbry.connector.plugin.util.propertyOrDefault
+import io.datalbry.connector.plugin.util.propertyOrNull
 import org.gradle.api.Project
 
 class OidcExtension(private val project: Project) {
-    var baseUrl: String = "login.datalbry.io"
-    var realm: String = "datalbry"
-    var clientId: String = "connector-registry"
-    var clientSecret: String? = null
-        get() = field ?: project.property("connector.oidc.clientSecret") as String
-    var username: String? = null
-        get() = field ?: project.property("connector.oidc.username") as String
-    var password: String? = null
-        get() = field ?: project.property("connector.oidc.password") as String
+    var baseUrl: String = project.propertyOrDefault("connector.oidc.baseUrl", "login.datalbry.io")
+    var realm: String = project.propertyOrDefault("connector.oidc.realm", "datalbry")
+    var clientId: String = project.propertyOrDefault("connector.oidc.clientId", "connector-registry")
+    var clientSecret: String? = project.propertyOrNull("connector.oidc.clientSecret")
+    var username: String? = project.propertyOrNull("connector.oidc.username")
+    var password: String? = project.propertyOrNull("connector.oidc.password")
 }
