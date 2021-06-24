@@ -12,7 +12,7 @@ const val TASK_GROUP = "connector"
  *
  * @author timo gruen - 2021-06-14
  */
-fun Project.setupTasks(extension: ConnectorPluginExtension) {
+fun Project.setupTasks() {
     val registerConnector = project.tasks.register("registerConnector", RegisterConnectorTask::class.java)
     registerConnector.orNull.let { group = TASK_GROUP }
 }

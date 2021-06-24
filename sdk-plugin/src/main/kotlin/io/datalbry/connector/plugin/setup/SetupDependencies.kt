@@ -24,21 +24,21 @@ fun Project.setupDependencies(extension: ConnectorPluginExtension) {
     val language = ProgrammingLanguage.byName(extension.language)
     if (!properties.enabled) return
     val dependencies = project.dependencies
-    project.setupRepositories(properties)
-    project.setupKsp(properties)
+    project.setupRepositories()
+    project.setupKsp()
     dependencies.setupConnectorSdkDependencies(properties)
     dependencies.setupPreciseDependencies(language, properties)
     dependencies.setupCommonsConfigDependencies(language, properties)
 }
 
-private fun Project.setupRepositories(extension: DependencyManagementExtension) {
+private fun Project.setupRepositories() {
     with(project.repositories) {
         google()
         mavenCentral()
     }
 }
 
-private fun Project.setupKsp(extension: DependencyManagementExtension) {
+private fun Project.setupKsp() {
     if (project.plugins.hasPlugin(KspGradleSubplugin.KSP_PLUGIN_ID)) return
     project.plugins.apply(KspGradleSubplugin::class.java)
 }

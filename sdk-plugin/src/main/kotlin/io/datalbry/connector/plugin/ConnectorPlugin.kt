@@ -9,10 +9,11 @@ class ConnectorPlugin: Plugin<Project> {
     override fun apply(project: Project) {
         val extension = setupExtensions(project)
         project.setupLanguage(extension)
+        project.setupVersionHandler()
         project.setupDependencies(extension)
         project.setupSpringBoot(extension)
         project.setupJib(extension)
-        project.setupTasks(extension)
+        project.setupTasks()
     }
 
     private fun setupExtensions(project: Project): ConnectorPluginExtension {
