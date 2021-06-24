@@ -16,9 +16,9 @@ fun Project.enablePlugin(id: String) {
 }
 
 inline fun <reified Type> Project.propertyOrNull(key: String): Type? {
-    return property(key) as Type?
+    return if (project.properties.containsKey(key)) property(key) as Type else null
 }
 
 inline fun <reified Type> Project.propertyOrDefault(key: String, default: Type): Type {
-    return property(key) as Type? ?: default
+    return propertyOrNull(key) ?: default
 }
