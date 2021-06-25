@@ -35,3 +35,17 @@ gradlePlugin {
         }
     }
 }
+
+// ------------------------------------------------------------------------
+// Gradle does not allow to programmatically access the version
+// But the plugin requires the version to add the correct versions of the connector-sdk preemptively
+// The most simplistic solution is simply to write a properties file, whenever compiling the plugin,
+// which then can be consumed by the plugin
+val values = tasks.create<Copy>("writeVersionPropertiesToResources") {
+    from("templates/version.properties")
+    into("src/main/resources")
+    expand(project.properties)
+}
+
+tasks.findByName("compileKotlin")!!.dependsOn(values)
+// ------------------------------------------------------------------------

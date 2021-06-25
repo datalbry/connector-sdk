@@ -12,3 +12,9 @@ subprojects {
 }
 
 group = "io.datalbry.connector"
+
+val values = tasks.create<Copy>("prepareDocs") {
+    from("templates/docs")
+    into("docs")
+    expand(project.properties)
+}

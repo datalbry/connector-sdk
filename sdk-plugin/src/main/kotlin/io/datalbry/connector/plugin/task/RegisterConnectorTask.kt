@@ -50,7 +50,7 @@ open class RegisterConnectorTask: DefaultTask() {
         var requestUrl = "$baseUrl/connector/registry"
 
         if (snapshotEnabled(registry) && isSnapshotRelease(extension)) {
-            requestUrl += "\$namespace=snapshot"
+            requestUrl += "?namespace=snapshot"
         }
 
         val post = HttpPost(requestUrl)
