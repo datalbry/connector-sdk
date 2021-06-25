@@ -31,6 +31,6 @@ private fun getDefaultConnectorSdkVersion(): String {
     DependencyManagementExtension::class.java.getResourceAsStream("/version.properties").use {
         val props = Properties()
         props.load(it)
-        return props["projectVersion"] as String
+        return props["version"] as String
     }
 }

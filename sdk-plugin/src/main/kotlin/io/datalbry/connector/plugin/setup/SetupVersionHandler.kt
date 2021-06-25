@@ -1,6 +1,5 @@
 package io.datalbry.connector.plugin.setup
 
-import io.datalbry.connector.plugin.ConnectorPluginExtension
 import org.gradle.api.Project
 import org.gradle.api.tasks.WriteProperties
 import org.jetbrains.kotlin.util.removeSuffixIfPresent
