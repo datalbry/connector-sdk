@@ -22,7 +22,7 @@ jobs:
           arguments: prepareDocs
 
       - name: Release Documentation
-        uses: crykn/copy_folder_to_another_repo_action@v1.0.6
+        uses: datalbry/copy_folder_to_another_repo_action@1.0.0
         env:
           API_TOKEN_GITHUB: ${{ secrets.CI_TOKEN }}
         with:
