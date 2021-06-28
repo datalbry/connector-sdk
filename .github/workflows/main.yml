@@ -119,9 +119,9 @@ jobs:
         env:
           API_TOKEN_GITHUB: ${{ secrets.CI_TOKEN }}
         with:
-          source_folder: 'docs'
+          source_folder: '/docs'
           destination_repo: 'datalbry/docs'
-          destination_folder: 'docs/integration/connector-sdk'
+          destination_folder: '/docs/integration/connector-sdk'
           destination_branch: 'main'
           user_email: ${{ secrets.CI_EMAIL }}
           user_name: ${{ secrets.CI_USERNAME }}
