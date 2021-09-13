@@ -11,6 +11,7 @@ import org.gradle.api.plugins.JavaLibraryPlugin
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 /**
@@ -32,7 +33,7 @@ fun Project.setupLanguage(extension: ConnectorPluginExtension) {
 
 private fun Project.setupJvm(kotlin: KotlinExtension) {
     project.configureJavaCompile(kotlin)
-    project.configureJavaPlugin()
+    project.configureJavaPlugin(kotlin)
 }
 
 private fun Project.setupKotlin(kotlin: KotlinExtension) {
@@ -60,8 +61,11 @@ private fun Project.configureKotlinCompile(kotlin: KotlinExtension) {
     }
 }
 
-private fun Project.configureJavaPlugin() {
+private fun Project.configureJavaPlugin(kotlin: KotlinExtension) {
     with(project.extensions.getByType(JavaPluginExtension::class.java)) {
+        toolchain {
+            it.languageVersion.set(JavaLanguageVersion.of(kotlin.version))
+        }
         withJavadocJar()
         withSourcesJar()
     }
