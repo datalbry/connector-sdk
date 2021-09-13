@@ -1,6 +1,5 @@
 package io.datalbry.connector.plugin.setup
 
-import io.datalbry.connector.plugin.ConnectorPluginExtension
 import io.datalbry.connector.plugin.task.RegisterConnectorTask
 import org.gradle.api.Project
 
