@@ -64,7 +64,7 @@ private fun Project.configureKotlinCompile(kotlin: KotlinExtension) {
 private fun Project.configureJavaPlugin(kotlin: KotlinExtension) {
     with(project.extensions.getByType(JavaPluginExtension::class.java)) {
         toolchain {
-            it.languageVersion.set(JavaLanguageVersion.of(kotlin.version))
+            it.languageVersion.set(JavaLanguageVersion.of(kotlin.sourceCompatibility.split(".").reversed().first()))
         }
         withJavadocJar()
         withSourcesJar()
