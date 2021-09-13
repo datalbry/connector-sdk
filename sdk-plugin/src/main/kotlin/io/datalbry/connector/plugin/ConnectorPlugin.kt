@@ -17,8 +17,7 @@ class ConnectorPlugin: Plugin<Project> {
     }
 
     private fun setupExtensions(project: Project): ConnectorPluginExtension {
-        val extension = project.extensions.create(EXTENSION_NAME, ConnectorPluginExtension::class.java, project)
-        return extension
+        return project.extensions.create(EXTENSION_NAME, ConnectorPluginExtension::class.java, project)
     }
 
     companion object {
