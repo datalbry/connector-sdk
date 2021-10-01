@@ -13,7 +13,7 @@ inline fun <reified Type> Record.isOfType() = Type::class.simpleName == this.typ
 /**
  * Checks if a document contains all given fields
  */
-fun <T> Record.containsFields(fields: Collection<Field<T>>): Boolean {
+fun Record.containsFields(fields: Collection<Field<*>>): Boolean {
     return this.fields.containsAll(fields);
 }
 
