@@ -1,10 +1,10 @@
 [versions]
 testcontainers = "1.15.1"
-precise = "0.0.8"
-commons-config = "0.0.1"
+precise = "0.0.9"
+commons-config = "0.0.2"
 alxndria-client = "0.0.3"
 alxndria-testcontainer = "1.0.0"
-kotlin = "1.4.21"
+kotlin = "1.5.30"
 junit = "5.7.0"
 
 [libraries]

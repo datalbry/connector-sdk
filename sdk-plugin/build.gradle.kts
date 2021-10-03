@@ -45,6 +45,7 @@ val values = tasks.create<Copy>("writeVersionPropertiesToResources") {
     from("templates/version.properties")
     into("src/main/resources")
     expand(project.properties)
+    outputs.upToDateWhen { false }
 }
 
 tasks.findByName("compileKotlin")!!.dependsOn(values)

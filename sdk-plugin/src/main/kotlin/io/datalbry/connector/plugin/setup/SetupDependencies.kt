@@ -39,7 +39,6 @@ private fun Project.setupRepositories() {
 }
 
 private fun Project.setupKsp() {
-    if (project.plugins.hasPlugin(KspGradleSubplugin.KSP_PLUGIN_ID)) return
     project.plugins.apply(KspGradleSubplugin::class.java)
 }
 

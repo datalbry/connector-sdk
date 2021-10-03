@@ -22,9 +22,9 @@ import java.util.*
  */
 class DependencyManagementExtension(project: Project) {
     var enabled: Boolean = project.propertyOrDefault("connector.dependencies.enabled", true)
-    var versionCommonsConfig: String = project.propertyOrDefault("connector.dependencies.versionCommonsConfig", "0.0.1")
+    var versionCommonsConfig: String = project.propertyOrDefault("connector.dependencies.versionCommonsConfig", "0.0.2")
     var versionConnectorSdk: String = project.propertyOrDefault("connector.dependencies.versionConnectorSdk", getDefaultConnectorSdkVersion())
-    var versionPrecise: String = project.propertyOrDefault("connector.dependencies.versionPrecise", "0.0.8")
+    var versionPrecise: String = project.propertyOrDefault("connector.dependencies.versionPrecise", "0.0.9")
 }
 
 private fun getDefaultConnectorSdkVersion(): String {
