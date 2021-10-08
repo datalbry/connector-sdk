@@ -16,6 +16,10 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import org.jetbrains.kotlin.util.prefixIfNot
 import java.io.File
+import org.apache.http.client.methods.HttpPut
+import org.gradle.api.GradleException
+import org.gradle.api.logging.LogLevel
+import org.gradle.internal.impldep.com.google.api.client.http.HttpStatusCodes
 
 /**
  * The [RegisterConnectorTask] registers a Connector in a Connector Registry.
@@ -40,10 +44,10 @@ open class RegisterConnectorTask: DefaultTask() {
     fun publish() {
         val connectorJson = buildConnectorJson()
         val accessToken = fetchOidcToken()
-        postConnectorToRegistry(connectorJson, accessToken)
+        putConnectorToRegistry(connectorJson, accessToken)
     }
 
-    private fun postConnectorToRegistry(connectorJson: String, accessToken: String) {
+    private fun putConnectorToRegistry(connectorJson: String, accessToken: String) {
         val extension = project.extensions.getByType(ConnectorPluginExtension::class.java)
         val registry = extension.registry
         val baseUrl = registry.baseUrl.prefixIfNot("https://")
@@ -53,12 +57,17 @@ open class RegisterConnectorTask: DefaultTask() {
             requestUrl += "?namespace=snapshot"
         }
 
-        val post = HttpPost(requestUrl)
-        post.addHeader("Content-Type", "application/json")
-        post.addHeader("Authorization", "Bearer $accessToken")
-        post.entity = StringEntity(connectorJson)
+        val put = HttpPut(requestUrl)
+        put.addHeader("Content-Type", "application/json")
+        put.addHeader("Authorization", "Bearer $accessToken")
+        put.entity = StringEntity(connectorJson)
 
-        http.execute(post)
+        val response = http.execute(put)
+        val statusCode = response.statusLine.statusCode
+        if (!validStatusCodes.contains(statusCode)) {
+            project.logger.log(LogLevel.ERROR, "StatusCode[$statusCode]: Not able to publish Connector.")
+            throw RuntimeException("StatusCode[$statusCode]: Not able to publish Connector.")
+        }
     }
 
     private fun snapshotEnabled(registry: ConnectorRegistryExtension) =
@@ -114,5 +123,13 @@ open class RegisterConnectorTask: DefaultTask() {
         )
 
         return UrlEncodedFormEntity(formValues, "UTF-8")
+    }
+
+    companion object {
+        private val validStatusCodes = listOf(
+            HttpStatusCodes.STATUS_CODE_OK,
+            HttpStatusCodes.STATUS_CODE_ACCEPTED,
+            HttpStatusCodes.STATUS_CODE_CREATED
+        )
     }
 }

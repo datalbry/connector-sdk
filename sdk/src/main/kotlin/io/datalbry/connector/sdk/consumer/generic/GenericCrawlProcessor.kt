@@ -55,7 +55,9 @@ class GenericCrawlProcessor(
             .flatMap { (obj, processor) -> processor.process(obj) }
             .map { it to mapper.first{ m -> m.supports(it)} }
             .map { it.second.getDocuments(it.first) to it.second.getEdges(it.first) }
-            .reduce { acc, i -> acc.first.union(i.first) to acc.second.union(i.second) }
+            .fold(emptySet<Document>() to emptySet<DocumentEdge>()) {
+                    acc, i -> acc.first.union(i.first) to acc.second.union(i.second)
+            }
 
         return DocumentNode(value.uuid, pair.first, pair.second)
     }
