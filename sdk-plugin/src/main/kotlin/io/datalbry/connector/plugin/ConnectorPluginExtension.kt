@@ -18,8 +18,8 @@ abstract class ConnectorPluginExtension @Inject constructor(private val project:
         get() = field ?: project.version as String
 
     var language: String = project.propertyOrDefault("connector.language","kotlin")
-    var configSchemaPath: String = project.propertyOrDefault("connector.configSchemaPath","generated/ksp/main/resources/META-INF/datalbry/schema.json")
-    var documentSchemaPath: String = project.propertyOrDefault("connector.documentSchemaPath","generated/ksp/main/resources/META-INF/datalbry/schema-config.json")
+    var configSchemaPath: String = project.propertyOrDefault("connector.configSchemaPath","generated/ksp/main/resources/META-INF/datalbry/schema-config.json")
+    var documentSchemaPath: String = project.propertyOrDefault("connector.documentSchemaPath","generated/ksp/main/resources/META-INF/datalbry/schema.json")
 
     var oidc: OidcExtension = OidcExtension(project)
     fun oidc(config: Action<in OidcExtension>) {
