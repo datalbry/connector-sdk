@@ -204,12 +204,12 @@ How do we come from the client api to the KeyNodes, KeyNodeContainer and such?
 ![](img/connector-project-00-03.png)
 ![](img/connector-project-00-04.png)
 
-The Container contains the KeyNodes, and they are annotated with `@Children`. This tells the Connector SDK that these
-will be passed to the respective processor. You can't by itself return a collection of the KeyNodes and expect the
-Connector SDK to pass them to the next processor. Later we will discuss another possibility on how to use
-the `@Children` annotation.
+The `PersonKeyNodeContainer` contains the `PersonKeyNode`s, and they are annotated with `@Children`. This way we tell
+the Connector SDK to give them to a processor and process them. In this case you see a collection of the KeyNodes but,
+you can also just have one single KeyNode here. More on that later. For now the Connector SDK will start a
+`PersonKeyNodeToPersonDocumentProcessor` for every `PersonKeyNode` in this container.
 
-Right now there are two processors:
+To sum it up, we have two processors:
 
 - `RootToPersonKeyNodeCollectionProcessor`, from the naming schema you can conclude that this processor starts from the
 root node and produces a `PersonKeyNodeContainer`. It should be `Container` and not `Collection`.
