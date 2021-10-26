@@ -44,11 +44,17 @@ class AnyToRecordMapper {
 
         return basicFields.toSet() + complexFields
             .map {
-                when(val value = it.value) {
+                when (val value = it.value) {
                     is Array<*> -> GenericField(it.name, value.filterNotNull().map(this::getRecord))
                     is Collection<*> -> GenericField(it.name, value.filterNotNull().map(this::getRecord))
+                    is RecordMap -> GenericField(it.name, (it.value as RecordMap).toGenericRecord())
                     else -> GenericField(it.name, getRecord(value))
                 }
             }
     }
+
+    private fun RecordMap.toGenericRecord() = GenericRecord(
+        type = this.recordName,
+        fields = this.map { (k, v) -> GenericField(k, v) }.toSet()
+    )
 }

@@ -2,6 +2,8 @@ package io.datalbry.connector.sdk.consumer.generic
 
 import io.datalbry.connector.sdk.consumer.generic.documents.*
 import io.datalbry.precise.api.schema.document.Record
+import io.datalbry.precise.api.schema.document.generic.GenericField
+import io.datalbry.precise.api.schema.document.generic.GenericRecord
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -131,6 +133,29 @@ internal class GenericItemMapperTest {
         val children = mapper.getEdges(container)
         val sourceEdges = childrenInput.map(Child::toEdge)
         assertTrue(children.containsAll(sourceEdges))
+    }
+
+
+    @Test
+    fun getDocuments_map_serializingMapToRecordCorrectly() {
+        val values = RecordMap("CsvRowType")
+        values.putAll(mapOf<String, Any>("hello" to "world", "1" to 1))
+        val item = DocumentWithMap(
+            docId="documentId",
+            title="Collection Item",
+            values= values,
+            modified=ZonedDateTime.now().toString()
+        )
+        val mapper = GenericItemMapper(item::class)
+        val documents = mapper.getDocuments(item)
+        assertTrue(documents.isNotEmpty())
+        val document = documents.first()
+        val mapRecord = document[DocumentWithMap::values.name]
+
+        with(mapRecord.value as GenericRecord) {
+            assertEquals(values.recordName, this.type)
+            values.forEach { (key, value) -> assertEquals(value, this[key].value) }
+        }
     }
 }
 
