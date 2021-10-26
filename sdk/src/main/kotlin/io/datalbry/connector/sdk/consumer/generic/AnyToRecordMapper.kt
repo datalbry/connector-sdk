@@ -47,7 +47,6 @@ class AnyToRecordMapper {
                 when(val value = it.value) {
                     is Array<*> -> GenericField(it.name, value.filterNotNull().map(this::getRecord))
                     is Collection<*> -> GenericField(it.name, value.filterNotNull().map(this::getRecord))
-                    is Map<*, *> -> GenericField(it.name, GenericRecord(type="foo", fields = value.map { (k, v) -> GenericField(k.toString(), v) }.toSet()))
                     else -> GenericField(it.name, getRecord(value))
                 }
             }
