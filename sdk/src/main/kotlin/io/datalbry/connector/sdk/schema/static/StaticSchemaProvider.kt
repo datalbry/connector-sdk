@@ -7,18 +7,21 @@ import org.springframework.stereotype.Component
 import java.io.File
 
 /**
- * TODO
+ * This [SchemaProvider] looks for the by Precise generated schema.json inside the JAR at /META-INF/datalbry/schema.json
  */
 @Component
 class StaticSchemaProvider : SchemaProvider {
 
     /**
-     * TODO
+     * Returns a [Schema] loaded from /META-INF/datalbry/schema.json
+     *
+     * @throws NoSuchFileException if the file is not present
+     * @return A [Schema] instance
      */
     override fun getSchema(): Schema {
 
         val resource = this::class.java.getResource(schemaPath)
-            ?: throw java.nio.file.NoSuchFileException("Schema JSON at $schemaPath is not available")
+            ?: throw java.nio.file.NoSuchFileException("Schema JSON at $schemaPath is not present")
 
         val objectMapper = ObjectMapper()
 
