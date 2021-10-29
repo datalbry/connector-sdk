@@ -21,15 +21,15 @@ class StaticSchemaProvider : SchemaProvider {
     override fun getSchema(): Schema {
 
         val inputStream = getResourceSpringBoot()
-            ?: getResourceDebugging()
+            ?: getResourceTesting()
             ?: throw java.nio.file.NoSuchFileException("Schema JSON at /$schemaPath is not present")
 
         val objectMapper = ObjectMapper()
-        return objectMapper.readValue(inputStream, Schema::class.java)
+        return objectMapper.readValue(inputStream, Schema::class.java) // TODO jackson can not parse this jsont
     }
 
     private fun getResourceSpringBoot() = this::class.java.classLoader.getResourceAsStream("/$schemaPath")
-    private fun getResourceDebugging() = this::class.java.getResourceAsStream("/$schemaPath")
+    private fun getResourceTesting() = this::class.java.getResourceAsStream("/$schemaPath")
 
     companion object {
         const val schemaPath = "META-INF/datalbry/schema.json"
