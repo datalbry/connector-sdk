@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component
 /**
  * This [SchemaProvider] looks for the by Precise generated schema.json inside the JAR at /META-INF/datalbry/schema.json
  */
-@Component
 class StaticSchemaProvider : SchemaProvider {
 
     /**
