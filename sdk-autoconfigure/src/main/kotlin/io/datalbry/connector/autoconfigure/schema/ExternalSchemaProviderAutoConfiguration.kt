@@ -10,11 +10,11 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
 
 @Configuration
-@Primary
 @ConditionalOnProperty(prefix="io.datalbry.schema", name=arrayOf("external"))
 open class ExternalSchemaProviderAutoConfiguration {
 
     @Bean
+    @Primary
     open fun externalSchemaProvider(): SchemaProvider {
         return ExternalSchemaProvider()
     }
