@@ -1,9 +1,13 @@
 package io.datalbry.connector.sdk.schema.static
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.module.SimpleModule
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.datalbry.connector.sdk.schema.SchemaProvider
 import io.datalbry.precise.api.schema.Schema
-import org.springframework.stereotype.Component
+import io.datalbry.precise.api.schema.type.Type
+import io.datalbry.precise.serialization.jackson.PreciseModule
+import io.datalbry.precise.serialization.jackson.deserializer.SchemaDeserializer
 
 
 /**
@@ -23,8 +27,13 @@ class StaticSchemaProvider : SchemaProvider {
             ?: getResourceTesting()
             ?: throw java.nio.file.NoSuchFileException("Schema JSON at /$schemaPath is not present")
 
+        // val module = SimpleModule().addDeserializer(Schema::class.java, SchemaDeserializer())
+
         val objectMapper = ObjectMapper()
-        return objectMapper.readValue(inputStream, Schema::class.java) // TODO jackson can not parse this jsont
+            .registerModule(PreciseModule(Schema(emptySet())))
+            .registerModule(KotlinModule())
+
+        return objectMapper.readValue(inputStream, Schema::class.java)
     }
 
     private fun getResourceSpringBoot() = this::class.java.classLoader.getResourceAsStream("/$schemaPath")
