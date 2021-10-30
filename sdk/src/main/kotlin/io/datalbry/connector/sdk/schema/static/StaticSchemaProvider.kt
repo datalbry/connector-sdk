@@ -27,8 +27,6 @@ class StaticSchemaProvider : SchemaProvider {
             ?: getResourceTesting()
             ?: throw java.nio.file.NoSuchFileException("Schema JSON at /$schemaPath is not present")
 
-        // val module = SimpleModule().addDeserializer(Schema::class.java, SchemaDeserializer())
-
         val objectMapper = ObjectMapper()
             .registerModule(PreciseModule(Schema(emptySet())))
             .registerModule(KotlinModule())
