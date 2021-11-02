@@ -4,6 +4,7 @@ import io.datalbry.alxndria.client.api.IndexClient
 import io.datalbry.precise.api.schema.document.Document
 import io.datalbry.connector.api.CrawlProcessor
 import io.datalbry.connector.api.DocumentEdge
+import io.datalbry.connector.api.document.DocumentCrawlProcessor
 import io.datalbry.connector.sdk.ConnectorProperties
 import io.datalbry.connector.sdk.ConnectorProperties.Companion.CONCURRENCY_PROPERTY
 import io.datalbry.connector.sdk.ConnectorProperties.Companion.ALXNDRIA_DATASOURCE_PROPERTY
@@ -48,7 +49,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener
 class AdditionMessageConsumer(
     props: ConnectorProperties,
     private val index: IndexClient,
-    private val processor: CrawlProcessor<DocumentEdge, Document>,
+    private val processor: DocumentCrawlProcessor,
     private val deletionChannel: Channel<NodeReference>,
     private val addChannel: Channel<DocumentEdge>,
     private val state: ConnectorDocumentState
