@@ -6,6 +6,7 @@ import io.datalbry.connector.api.CrawlProcessor
 import io.datalbry.connector.api.DocumentEdge
 import io.datalbry.connector.api.DocumentNode
 import io.datalbry.connector.api.Node
+import io.datalbry.connector.api.document.DocumentCrawlProcessor
 import io.datalbry.connector.api.document.DocumentProcessor
 import org.slf4j.LoggerFactory
 
@@ -28,7 +29,7 @@ import org.slf4j.LoggerFactory
 class GenericCrawlProcessor(
         private val crawlProcessors: Collection<DocumentProcessor<*, *>>
 )
-    : CrawlProcessor<DocumentEdge, Document>
+    : DocumentCrawlProcessor
 {
     private val inner : Collection<ReflectionProcessor> = crawlProcessors.map { ReflectionProcessorImpl(it) }
     private val mapper: Collection<ItemMapper<Any>> = inner.map { GenericItemMapper(it.produces().kotlin) }

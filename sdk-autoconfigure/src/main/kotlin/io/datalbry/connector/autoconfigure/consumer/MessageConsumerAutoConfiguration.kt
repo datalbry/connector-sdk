@@ -4,6 +4,7 @@ import io.datalbry.alxndria.client.api.IndexClient
 import io.datalbry.precise.api.schema.document.Document
 import io.datalbry.connector.api.CrawlProcessor
 import io.datalbry.connector.api.DocumentEdge
+import io.datalbry.connector.api.document.DocumentCrawlProcessor
 import io.datalbry.connector.sdk.ConnectorProperties
 import io.datalbry.connector.sdk.consumer.AdditionMessageConsumer
 import io.datalbry.connector.sdk.consumer.DeletionMessageConsumer
@@ -22,7 +23,7 @@ open class MessageConsumerAutoConfiguration {
     open fun additionMessageConsumer(
         props: ConnectorProperties,
         index: IndexClient,
-        processor: CrawlProcessor<DocumentEdge, Document>,
+        processor: DocumentCrawlProcessor,
         deletions: Channel<NodeReference>,
         additions: Channel<DocumentEdge>,
         state: ConnectorDocumentState
