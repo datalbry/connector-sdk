@@ -2,6 +2,7 @@ package io.datalbry.connector.sdk.schema.external
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.datalbry.connector.sdk.schema.SchemaProvider
 import io.datalbry.connector.sdk.schema.static.StaticSchemaProvider
 import io.datalbry.precise.api.schema.Schema
@@ -20,9 +21,8 @@ class ExternalConfiguredSchemaProvider(private val properties: ExternalConfigure
     override fun getSchema(): Schema {
         val inputStream = File(properties.path).inputStream()
 
-        val objectMapper = ObjectMapper()
+        val objectMapper = jacksonObjectMapper()
             .registerModule(PreciseModule(Schema(emptySet())))
-            .registerModule(KotlinModule())
 
         return objectMapper.readValue(inputStream, Schema::class.java)
     }
