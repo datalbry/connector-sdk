@@ -36,8 +36,8 @@ Next we want to set up the three projects you previously pulled.
 First, you need to build the OCI image locally using Docker. To achieve this simply run the following command from within the project directory
 
 ```shell
-$ docker build -t sample-api .
-$ docker run -p 8000:8000 sample-api
+\$ docker build -t sample-api .
+\$ docker run -p 8000:8000 sample-api
 ```
 
 The API should instantly become ready on http://127.0.0.1:8000. You can easily verify it by visiting
@@ -177,7 +177,7 @@ Next we are going to dive into the connector and explore it step by step. We wil
 First you should check out to the branch `00-first-processor-person-document`
 
 ```shell
-$ git checkout 00-first-processor-person-document
+\$ git checkout 00-first-processor-person-document
 ```
 
 When you open the project you should see the following project structure:
@@ -262,7 +262,7 @@ This utility function fetches does:
 For this part please check out at the branch `01-processing-second-layer-documents`
 
 ```shell
-$ git checkout 01-processing-second-layer-documents
+\$ git checkout 01-processing-second-layer-documents
 ```
 
 Now we are going to extend the connector and add documents which are deeper inside the API. Documents which are more or
@@ -293,7 +293,7 @@ Lastly we have to cover the remaining part from the root node. For this part ple
 branch `02-processing-office-pets`
 
 ```shell
-$ git checkout 02-processing-office-pets
+\$ git checkout 02-processing-office-pets
 ```
 
 This part of the documentation covers a case where we can retrieve a collection of documents. We don't have a
