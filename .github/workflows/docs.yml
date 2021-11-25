@@ -34,7 +34,7 @@ jobs:
         env:
           API_TOKEN_GITHUB: ${{ secrets.CI_TOKEN }}
         with:
-          source_folder: 'docs'
+          source_folder: 'docs/userDocs'
           destination_repo: 'datalbry/docs'
           destination_folder: 'docs/Integrations/Connector-SDK'
           destination_branch: 'main'
@@ -47,7 +47,7 @@ jobs:
         env:
           API_TOKEN_GITHUB: ${{ secrets.CI_TOKEN }}
         with:
-          source_folder: 'docs'
+          source_folder: 'docs/tutorials'
           destination_repo: 'datalbry/docs'
           destination_folder: 'docs/Tutorials'
           destination_branch: 'main'

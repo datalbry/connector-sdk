@@ -14,16 +14,8 @@ subprojects {
 group = "io.datalbry.connector"
 
 tasks.create<Copy>("prepareDocs") {
-    from("templates/docs")
-    into("docs/userDocs")
-    filesMatching("*.mdx") {
-        expand(project.properties)
-    }
-}
-
-tasks.create<Copy>("prepareTutorials") {
-    from("templates/tutorials")
-    into("docs/tutorials")
+    from("templates")
+    into("docs")
     filesMatching("*.mdx") {
         expand(project.properties)
     }
