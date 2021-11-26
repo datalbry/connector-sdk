@@ -1,4 +1,4 @@
-package io.datalbry.connector.autoconfigure
+package io.datalbry.connector.autoconfigure.bootstrap
 
 import io.datalbry.alxndria.client.api.PlatformClient
 import io.datalbry.connector.sdk.ConnectorProperties
