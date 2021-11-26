@@ -13,9 +13,10 @@ import org.springframework.stereotype.Component
 import java.io.File
 
 /**
- * TODO
+ * The [ExternalConfiguredSchemaProvider] loads a Precise schema from a file you provide.
+ *
+ * @param properties: Contains the full path to the schema
  */
-
 class ExternalConfiguredSchemaProvider(private val properties: ExternalConfiguredSchemaProviderProperties): SchemaProvider {
 
     override fun getSchema(): Schema {
