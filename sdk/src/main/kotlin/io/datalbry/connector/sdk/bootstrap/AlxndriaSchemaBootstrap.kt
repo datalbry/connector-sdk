@@ -3,6 +3,7 @@ package io.datalbry.connector.sdk.bootstrap
 import io.datalbry.alxndria.client.api.PlatformClient
 import io.datalbry.connector.sdk.ConnectorProperties
 import io.datalbry.connector.sdk.schema.SchemaProvider
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
 import org.springframework.stereotype.Component
 
 /**
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Component
  * @param schemaProvider: A schema provider.
  * @param properties: Connector properties which contain information about alxndria's datasource.
  */
-@Component
 open class AlxndriaSchemaBootstrap(
     alxndria: PlatformClient,
     schemaProvider: SchemaProvider,
