@@ -13,8 +13,11 @@ publishing {
 }
 
 configure<SigningExtension> {
-    useGpgCmd()
-    sign(publishing.publications["maven"])
+    val shouldRun = (project.extra.properties["sign"] as String?).toBoolean()
+    if (shouldRun) {
+        useGpgCmd()
+        sign(publishing.publications["maven"])
+    }
 }
 
 fun MavenPublication.pom() {
