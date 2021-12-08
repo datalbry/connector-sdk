@@ -4,4 +4,6 @@ io.datalbry.connector.autoconfigure.GenericCrawlProcessorAutoConfiguration,\
 io.datalbry.connector.autoconfigure.amqp.AmqpAutoConfiguration,\
 io.datalbry.connector.autoconfigure.amqp.RabbitMqChannelAutoConfiguration,\
 io.datalbry.connector.autoconfigure.consumer.MessageConsumerAutoConfiguration,\
-io.datalbry.connector.autoconfigure.state.JpaConnectorDocumentStateAutoConfiguration
+io.datalbry.connector.autoconfigure.state.JpaConnectorDocumentStateAutoConfiguration,\
+io.datalbry.connector.autoconfigure.schema.SchemaProviderAutoConfiguration,\
+io.datalbry.connector.autoconfigure.schema.ExternalConfiguredSchemaProviderAutoConfiguration

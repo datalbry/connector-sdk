@@ -12,6 +12,6 @@ dependencies {
     implementation(libs.spring.amqp)
     implementation(libs.jackson.kotlin)
     implementation(libs.datalbry.alxndria.client)
-
+    implementation(libs.datalbry.precise.serialization.jackson)
     testImplementation(libs.bundles.testing)
 }
