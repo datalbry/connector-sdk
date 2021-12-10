@@ -8,7 +8,6 @@ import org.junit.jupiter.api.assertThrows
 import java.net.URI
 import java.time.ZonedDateTime
 import java.util.*
-import kotlin.NoSuchElementException
 
 internal class GenericItemMapperTest {
 
@@ -55,7 +54,8 @@ internal class GenericItemMapperTest {
 
     @Test
     fun getDocuments_documentContainsCollection_workJustFine() {
-        val item = DocumentWithCollection("another unique id", "Collection Item", listOf(""), ZonedDateTime.now().toString())
+        val item =
+            DocumentWithCollection("another unique id", "Collection Item", listOf(""), ZonedDateTime.now().toString())
         val mapper = GenericItemMapper(item::class)
 
         val document = mapper.getDocuments(item).first()
@@ -69,7 +69,12 @@ internal class GenericItemMapperTest {
 
     @Test
     fun getDocuments_containingCollectionOfIds_gettingReducedCorrectly() {
-        val item = DocumentWithIdCollection(listOf("id1", "id2"), "Collection Item", listOf(""), ZonedDateTime.now().toString())
+        val item = DocumentWithIdCollection(
+            listOf("id1", "id2"),
+            "Collection Item",
+            listOf(""),
+            ZonedDateTime.now().toString()
+        )
         val mapper = GenericItemMapper(item::class)
 
         val document = mapper.getDocuments(item).first()
@@ -101,7 +106,12 @@ internal class GenericItemMapperTest {
 
     @Test
     fun getDocuments_deconstructingComplexFields_areMappedToRecords() {
-        val item = DocumentWithComplexProperty("id", "Collection Item", Person("test", "test@example.org") ,ZonedDateTime.now().toString())
+        val item = DocumentWithComplexProperty(
+            "id",
+            "Collection Item",
+            Person("test", "test@example.org"),
+            ZonedDateTime.now().toString()
+        )
         val mapper = GenericItemMapper(item::class)
 
         val document = mapper.getDocuments(item).first()
@@ -131,6 +141,23 @@ internal class GenericItemMapperTest {
         val children = mapper.getEdges(container)
         val sourceEdges = childrenInput.map(Child::toEdge)
         assertTrue(children.containsAll(sourceEdges))
+    }
+
+    @Test
+    fun getDocument_mappingOptionalComplexProperty_correctlyMapped() {
+        val item = DocumentWithOptionalComplexProperty(
+            1,
+            Optional.of(
+                TestRecordWithOptionalRecord(
+                    1, Optional.empty()
+                )
+            )
+        )
+        val mapper = GenericItemMapper(DocumentWithOptionalComplexProperty::class)
+
+        assertDoesNotThrow {
+            val documents = mapper.getDocuments(item)
+        }
     }
 }
 
