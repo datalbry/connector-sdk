@@ -24,7 +24,7 @@ class DependencyManagementExtension(project: Project) {
     var enabled: Boolean = project.propertyOrDefault("connector.dependencies.enabled", true)
     var versionCommonsConfig: String = project.propertyOrDefault("connector.dependencies.versionCommonsConfig", "0.0.2")
     var versionConnectorSdk: String = project.propertyOrDefault("connector.dependencies.versionConnectorSdk", getDefaultConnectorSdkVersion())
-    var versionPrecise: String = project.propertyOrDefault("connector.dependencies.versionPrecise", "0.0.9")
+    var versionPrecise: String = project.propertyOrDefault("connector.dependencies.versionPrecise", "0.0.10")
 }
 
 private fun getDefaultConnectorSdkVersion(): String {
