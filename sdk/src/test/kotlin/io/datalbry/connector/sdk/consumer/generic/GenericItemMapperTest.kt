@@ -2,6 +2,9 @@ package io.datalbry.connector.sdk.consumer.generic
 
 import io.datalbry.connector.sdk.consumer.generic.documents.*
 import io.datalbry.precise.api.schema.document.Record
+import io.datalbry.precise.api.schema.document.generic.GenericDocument
+import io.datalbry.precise.api.schema.document.generic.GenericField
+import io.datalbry.precise.api.schema.document.generic.GenericRecord
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -144,6 +147,26 @@ internal class GenericItemMapperTest {
     }
 
     @Test
+    fun getDocument_mappingOptionalEmptyComplexProperty_correctlyMapped() {
+        val item = DocumentWithOptionalComplexProperty(1, Optional.empty())
+        val mapper = GenericItemMapper(DocumentWithOptionalComplexProperty::class)
+        val document = mapper.getDocuments(item).first()
+        val expected = GenericDocument(
+            type = "DocumentWithOptionalComplexProperty",
+            id = UUID.nameUUIDFromBytes(item.id.toString().toByteArray()).toString(),
+            fields = setOf(
+                GenericField("id", 1),
+                GenericField(
+                    "testRecordWithOptionalRecord",
+                    Optional.empty<TestRecordWithOptionalRecord>()
+                ),
+                GenericField("_checksum", "")
+            )
+        )
+        assertEquals(expected, document)
+    }
+
+    @Test
     fun getDocument_mappingOptionalComplexProperty_correctlyMapped() {
         val item = DocumentWithOptionalComplexProperty(
             1,
@@ -154,10 +177,28 @@ internal class GenericItemMapperTest {
             )
         )
         val mapper = GenericItemMapper(DocumentWithOptionalComplexProperty::class)
-
-        assertDoesNotThrow {
-            val documents = mapper.getDocuments(item)
-        }
+        val document = mapper.getDocuments(item).first()
+        val expected = GenericDocument(
+            type = "DocumentWithOptionalComplexProperty",
+            id = UUID.nameUUIDFromBytes(item.id.toString().toByteArray()).toString(),
+            fields = setOf(
+                GenericField("id", 1),
+                GenericField(
+                    "testRecordWithOptionalRecord",
+                    Optional.of(
+                        GenericRecord(
+                            "TestRecordWithOptionalRecord",
+                            setOf(
+                                GenericField("id", 1),
+                                GenericField("testRecord", Optional.empty<TestRecord>()),
+                            )
+                        )
+                    )
+                ),
+                GenericField("_checksum", "")
+            )
+        )
+        assertEquals(expected, document)
     }
 }
 

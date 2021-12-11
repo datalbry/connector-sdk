@@ -6,7 +6,7 @@ import io.datalbry.connector.api.DocumentEdge
 import io.datalbry.connector.api.annotation.property.Checksum
 import io.datalbry.connector.sdk.consumer.AdditionMessageConsumer.Companion.CHECKSUM_FIELD
 import io.datalbry.connector.sdk.consumer.generic.GenericCrawlProcessor.Companion.TYPE_KEY
-import io.datalbry.connector.sdk.util.annotatedWith
+import io.datalbry.connector.sdk.extension.annotatedWith
 import io.datalbry.precise.api.schema.document.Document
 import io.datalbry.precise.api.schema.document.Field
 import io.datalbry.precise.api.schema.document.generic.GenericDocument
