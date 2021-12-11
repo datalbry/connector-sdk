@@ -1,7 +1,6 @@
 package io.datalbry.connector.sdk.consumer.generic
 
 import io.datalbry.connector.sdk.extension.annotatedWith
-import io.datalbry.connector.sdk.extension.isOptionalWithGenericType
 import io.datalbry.connector.sdk.util.isBasicFieldType
 import io.datalbry.precise.api.schema.Exclude
 import io.datalbry.precise.api.schema.document.Field
