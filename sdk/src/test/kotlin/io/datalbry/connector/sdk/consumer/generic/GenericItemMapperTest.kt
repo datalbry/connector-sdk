@@ -147,8 +147,46 @@ internal class GenericItemMapperTest {
     }
 
     @Test
+    fun getDocument_mappingOptionalEmptySimpleProperty_correctlyMapped() {
+        val item = DocumentWithOptionalSimpleProperty(
+            1,
+            Optional.empty(),
+            Optional.empty(),
+            TestRecordWithOptionalSimpleProperty(
+                1,
+                Optional.of("TestString"),
+                Optional.of(1),
+            )
+        )
+        val mapper = GenericItemMapper(DocumentWithOptionalSimpleProperty::class)
+        val document = mapper.getDocuments(item).first()
+        val expected = GenericDocument(
+            type = "DocumentWithOptionalSimpleProperty",
+            id = UUID.nameUUIDFromBytes(item.id.toString().toByteArray()).toString(),
+            fields = setOf(
+                GenericField("id", 1),
+                GenericField("optionalInt", Optional.empty<Int>()),
+                GenericField("optionalString", Optional.empty<String>()),
+                GenericField(
+                    "testRecordWithOptionalSimpleProperty",
+                    GenericRecord(
+                        type = "TestRecordWithOptionalSimpleProperty",
+                        setOf(
+                            GenericField("id", 1),
+                            GenericField("optionalInt", Optional.of(1)),
+                            GenericField("optionalString", Optional.of("TestString")),
+                        )
+                    )
+                ),
+                GenericField("_checksum", "")
+            )
+        )
+        assertEquals(expected, document)
+    }
+
+    @Test
     fun getDocument_mappingOptionalEmptyComplexProperty_correctlyMapped() {
-        val item = DocumentWithOptionalComplexProperty(1, Optional.empty())
+        val item = DocumentWithOptionalComplexProperty(1, Optional.empty(), Optional.empty(), Optional.empty())
         val mapper = GenericItemMapper(DocumentWithOptionalComplexProperty::class)
         val document = mapper.getDocuments(item).first()
         val expected = GenericDocument(
@@ -156,6 +194,8 @@ internal class GenericItemMapperTest {
             id = UUID.nameUUIDFromBytes(item.id.toString().toByteArray()).toString(),
             fields = setOf(
                 GenericField("id", 1),
+                GenericField("optionalInt", Optional.empty<Int>()),
+                GenericField("optionalString", Optional.empty<String>()),
                 GenericField(
                     "testRecordWithOptionalRecord",
                     Optional.empty<TestRecordWithOptionalRecord>()
@@ -170,9 +210,12 @@ internal class GenericItemMapperTest {
     fun getDocument_mappingOptionalComplexProperty_correctlyMapped() {
         val item = DocumentWithOptionalComplexProperty(
             1,
+            Optional.of("TestString"),
+            Optional.of(1),
             Optional.of(
                 TestRecordWithOptionalRecord(
-                    1, Optional.empty()
+                    1,
+                    Optional.empty()
                 )
             )
         )
@@ -183,6 +226,8 @@ internal class GenericItemMapperTest {
             id = UUID.nameUUIDFromBytes(item.id.toString().toByteArray()).toString(),
             fields = setOf(
                 GenericField("id", 1),
+                GenericField("optionalInt", Optional.of(1)),
+                GenericField("optionalString", Optional.of("TestString")),
                 GenericField(
                     "testRecordWithOptionalRecord",
                     Optional.of(

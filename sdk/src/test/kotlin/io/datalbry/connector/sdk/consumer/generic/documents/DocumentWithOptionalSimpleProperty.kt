@@ -7,21 +7,18 @@ import java.util.*
 
 @Document
 @SchemaAware
-data class DocumentWithOptionalComplexProperty(
+data class DocumentWithOptionalSimpleProperty(
     @Id val id: Int,
     val optionalString: Optional<String>,
     val optionalInt: Optional<Int>,
-    val testRecordWithOptionalRecord: Optional<TestRecordWithOptionalRecord>
+    val testRecordWithOptionalSimpleProperty: TestRecordWithOptionalSimpleProperty
 )
 
 
 @SchemaAware
-data class TestRecordWithOptionalRecord(
+data class TestRecordWithOptionalSimpleProperty(
     val id: Int,
-    val testRecord: Optional<TestRecord>
-    )
-
-@SchemaAware
-data class TestRecord(
-    val a: Int
+    val optionalString: Optional<String>,
+    val optionalInt: Optional<Int>,
 )
+
