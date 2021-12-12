@@ -245,5 +245,22 @@ internal class GenericItemMapperTest {
         )
         assertEquals(expected, document)
     }
+
+    @Test
+    fun getDocument_mappingNullableSimpleProperty_correctlyMapped() {
+        val item = DocumentWithNullableSimpleProperty(
+            1,
+            null,
+            null,
+            TestRecordWithNullableSimpleProperty(
+                1,
+                null,
+                null
+            )
+        )
+        val mapper = GenericItemMapper(DocumentWithNullableSimpleProperty::class)
+        val document = mapper.getDocuments(item).first()
+        println("")
+    }
 }
 
