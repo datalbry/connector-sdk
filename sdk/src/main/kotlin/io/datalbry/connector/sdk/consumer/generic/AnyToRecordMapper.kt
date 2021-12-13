@@ -1,12 +1,13 @@
 package io.datalbry.connector.sdk.consumer.generic
 
-import io.datalbry.connector.sdk.util.annotatedWith
+import io.datalbry.connector.sdk.extension.annotatedWith
 import io.datalbry.connector.sdk.util.isBasicFieldType
 import io.datalbry.precise.api.schema.Exclude
 import io.datalbry.precise.api.schema.document.Field
 import io.datalbry.precise.api.schema.document.Record
 import io.datalbry.precise.api.schema.document.generic.GenericField
 import io.datalbry.precise.api.schema.document.generic.GenericRecord
+import java.util.*
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.javaGetter
 
@@ -34,7 +35,7 @@ class AnyToRecordMapper {
     }
 
     private fun getMetadata(item: Any): Set<Field<*>> {
-        val getter = item::class.declaredMemberProperties
+        val getter = item::class.declaredMemberProperties.toList()
         val (basicFields, complexFields) = getter
             .asSequence()
             .filterNot { it.annotatedWith<Exclude>() }
@@ -44,10 +45,12 @@ class AnyToRecordMapper {
 
         return basicFields.toSet() + complexFields
             .map {
-                when(val value = it.value) {
+                when (val value = it.value) {
                     is Array<*> -> GenericField(it.name, value.filterNotNull().map(this::getRecord))
                     is Collection<*> -> GenericField(it.name, value.filterNotNull().map(this::getRecord))
-                    else -> GenericField(it.name, getRecord(value))
+                    is Optional<*> -> GenericField(it.name, value.map(this::getRecord))
+                    else -> GenericField(it.name, if (value != null) getRecord(value) else null)
+
                 }
             }
     }
