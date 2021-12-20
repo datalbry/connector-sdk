@@ -80,9 +80,18 @@ open class RegisterConnectorTask: DefaultTask() {
         val container = extension.container
 
         val schemaFile = File("${project.buildDir.absolutePath}/${extension.documentSchemaPath}")
-        val schema = if(schemaFile.exists()) jacksonObjectMapper().readTree(schemaFile) else null
-        val connectorType = if(schemaFile.exists()) "STATIC" else "DYNAMIC"
         val configFile = File("${project.buildDir.absolutePath}/${extension.configSchemaPath}")
+
+        val schema: JsonNode?
+        val connectorType: String
+
+        if(schemaFile.exists()) {
+            schema = jacksonObjectMapper().readTree(schemaFile)
+            connectorType = "STATIC"
+        } else {
+            schema = null
+            connectorType = "DYNAMIC"
+        }
 
         val root = json.nodeFactory.objectNode()
 
