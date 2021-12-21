@@ -22,7 +22,7 @@ group = "io.datalbry.connector"
 tasks.create<Copy>("prepareDocs") {
     from("templates")
     into("docs")
-    filesMatching("*.mdx") {
+    filesMatching("**/*.mdx") {
         expand(project.properties)
     }
 }

@@ -8,7 +8,7 @@ The Connector-SDK is primarily for DataLbry internal usage, nevertheless we are 
 
 ```kotlin
 plugins {
-    id("io.datalbry.connector.sdk") version "$projectVersion"
+    id("io.datalbry.connector.sdk") version "$version"
 }
 ```
 
@@ -23,7 +23,7 @@ pluginManagement {
     resolutionStrategy {
         eachPlugin {
             if (requested.id.id == "io.datalbry.connector.sdk") {
-                useModule("io.datalbry.connector:connector-sdk-plugin:$projectVersion")
+                useModule("io.datalbry.connector:connector-sdk-plugin:$version")
             }
         }
     }
