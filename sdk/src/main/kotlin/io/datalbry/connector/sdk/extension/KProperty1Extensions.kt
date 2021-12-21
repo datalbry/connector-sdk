@@ -1,4 +1,4 @@
-package io.datalbry.connector.sdk.util
+package io.datalbry.connector.sdk.extension
 
 import kotlin.reflect.KProperty1
 

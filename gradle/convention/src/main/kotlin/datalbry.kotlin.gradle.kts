@@ -28,6 +28,12 @@ tasks.getByName("jacocoTestReport") {
     enabled = false
 }
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+    }
+}
+
 // We are using Kotlin, so wdk about the Java Version onwards, as we are not relying on Java 11+ features
 tasks.withType<JavaCompile> {
     sourceCompatibility = "1.8"

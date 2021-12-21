@@ -2,13 +2,15 @@ package io.datalbry.connector.sdk.consumer.generic
 
 import io.datalbry.connector.sdk.consumer.generic.documents.*
 import io.datalbry.precise.api.schema.document.Record
+import io.datalbry.precise.api.schema.document.generic.GenericDocument
+import io.datalbry.precise.api.schema.document.generic.GenericField
+import io.datalbry.precise.api.schema.document.generic.GenericRecord
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.net.URI
 import java.time.ZonedDateTime
 import java.util.*
-import kotlin.NoSuchElementException
 
 internal class GenericItemMapperTest {
 
@@ -55,7 +57,8 @@ internal class GenericItemMapperTest {
 
     @Test
     fun getDocuments_documentContainsCollection_workJustFine() {
-        val item = DocumentWithCollection("another unique id", "Collection Item", listOf(""), ZonedDateTime.now().toString())
+        val item =
+            DocumentWithCollection("another unique id", "Collection Item", listOf(""), ZonedDateTime.now().toString())
         val mapper = GenericItemMapper(item::class)
 
         val document = mapper.getDocuments(item).first()
@@ -69,7 +72,12 @@ internal class GenericItemMapperTest {
 
     @Test
     fun getDocuments_containingCollectionOfIds_gettingReducedCorrectly() {
-        val item = DocumentWithIdCollection(listOf("id1", "id2"), "Collection Item", listOf(""), ZonedDateTime.now().toString())
+        val item = DocumentWithIdCollection(
+            listOf("id1", "id2"),
+            "Collection Item",
+            listOf(""),
+            ZonedDateTime.now().toString()
+        )
         val mapper = GenericItemMapper(item::class)
 
         val document = mapper.getDocuments(item).first()
@@ -101,7 +109,12 @@ internal class GenericItemMapperTest {
 
     @Test
     fun getDocuments_deconstructingComplexFields_areMappedToRecords() {
-        val item = DocumentWithComplexProperty("id", "Collection Item", Person("test", "test@example.org") ,ZonedDateTime.now().toString())
+        val item = DocumentWithComplexProperty(
+            "id",
+            "Collection Item",
+            Person("test", "test@example.org"),
+            ZonedDateTime.now().toString()
+        )
         val mapper = GenericItemMapper(item::class)
 
         val document = mapper.getDocuments(item).first()
@@ -131,6 +144,123 @@ internal class GenericItemMapperTest {
         val children = mapper.getEdges(container)
         val sourceEdges = childrenInput.map(Child::toEdge)
         assertTrue(children.containsAll(sourceEdges))
+    }
+
+    @Test
+    fun getDocument_mappingOptionalEmptySimpleProperty_correctlyMapped() {
+        val item = DocumentWithOptionalSimpleProperty(
+            1,
+            Optional.empty(),
+            Optional.empty(),
+            TestRecordWithOptionalSimpleProperty(
+                1,
+                Optional.of("TestString"),
+                Optional.of(1),
+            )
+        )
+        val mapper = GenericItemMapper(DocumentWithOptionalSimpleProperty::class)
+        val document = mapper.getDocuments(item).first()
+        val expected = GenericDocument(
+            type = "DocumentWithOptionalSimpleProperty",
+            id = UUID.nameUUIDFromBytes(item.id.toString().toByteArray()).toString(),
+            fields = setOf(
+                GenericField("id", 1),
+                GenericField("optionalInt", Optional.empty<Int>()),
+                GenericField("optionalString", Optional.empty<String>()),
+                GenericField(
+                    "testRecordWithOptionalSimpleProperty",
+                    GenericRecord(
+                        type = "TestRecordWithOptionalSimpleProperty",
+                        setOf(
+                            GenericField("id", 1),
+                            GenericField("optionalInt", Optional.of(1)),
+                            GenericField("optionalString", Optional.of("TestString")),
+                        )
+                    )
+                ),
+                GenericField("_checksum", "")
+            )
+        )
+        assertEquals(expected, document)
+    }
+
+    @Test
+    fun getDocument_mappingOptionalEmptyComplexProperty_correctlyMapped() {
+        val item = DocumentWithOptionalComplexProperty(1, Optional.empty(), Optional.empty(), Optional.empty())
+        val mapper = GenericItemMapper(DocumentWithOptionalComplexProperty::class)
+        val document = mapper.getDocuments(item).first()
+        val expected = GenericDocument(
+            type = "DocumentWithOptionalComplexProperty",
+            id = UUID.nameUUIDFromBytes(item.id.toString().toByteArray()).toString(),
+            fields = setOf(
+                GenericField("id", 1),
+                GenericField("optionalInt", Optional.empty<Int>()),
+                GenericField("optionalString", Optional.empty<String>()),
+                GenericField(
+                    "testRecordWithOptionalRecord",
+                    Optional.empty<TestRecordWithOptionalRecord>()
+                ),
+                GenericField("_checksum", "")
+            )
+        )
+        assertEquals(expected, document)
+    }
+
+    @Test
+    fun getDocument_mappingOptionalComplexProperty_correctlyMapped() {
+        val item = DocumentWithOptionalComplexProperty(
+            1,
+            Optional.of("TestString"),
+            Optional.of(1),
+            Optional.of(
+                TestRecordWithOptionalRecord(
+                    1,
+                    Optional.empty()
+                )
+            )
+        )
+        val mapper = GenericItemMapper(DocumentWithOptionalComplexProperty::class)
+        val document = mapper.getDocuments(item).first()
+        val expected = GenericDocument(
+            type = "DocumentWithOptionalComplexProperty",
+            id = UUID.nameUUIDFromBytes(item.id.toString().toByteArray()).toString(),
+            fields = setOf(
+                GenericField("id", 1),
+                GenericField("optionalInt", Optional.of(1)),
+                GenericField("optionalString", Optional.of("TestString")),
+                GenericField(
+                    "testRecordWithOptionalRecord",
+                    Optional.of(
+                        GenericRecord(
+                            "TestRecordWithOptionalRecord",
+                            setOf(
+                                GenericField("id", 1),
+                                GenericField("testRecord", Optional.empty<TestRecord>()),
+                            )
+                        )
+                    )
+                ),
+                GenericField("_checksum", "")
+            )
+        )
+        assertEquals(expected, document)
+    }
+
+    @Test
+    fun getDocument_mappingNullableSimpleProperty_correctlyMapped() {
+        val item = DocumentWithNullableSimpleProperty(
+            1,
+            null,
+            null,
+            TestRecordWithNullableSimpleProperty(
+                1,
+                null,
+                null
+            )
+        )
+        val mapper = GenericItemMapper(DocumentWithNullableSimpleProperty::class)
+        val document = mapper.getDocuments(item).first()
+        println("")
     }
 }
 
