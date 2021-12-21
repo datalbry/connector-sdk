@@ -19,8 +19,10 @@ semver {
 
 group = "io.datalbry.connector"
 
-val values = tasks.create<Copy>("prepareDocs") {
-    from("templates/docs")
+tasks.create<Copy>("prepareDocs") {
+    from("templates")
     into("docs")
-    expand(project.properties)
+    filesMatching("*.mdx") {
+        expand(project.properties)
+    }
 }

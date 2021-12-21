@@ -5,11 +5,9 @@ The `Connector-SDK` is a sophisticated framework to develop `Connector Integrati
 A `Connector Integration` is a application, fetching data from a system, transform it briefly and put it into 
 another system. It can be considered as an `ETL` / `ELT` tool, while not enabling the user to transform the data.  
 
-* [Overview](/docs/QUICKSTART.mdx)
-* [Getting Started](/docs/QUICKSTART.mdx)
-* [Concept](/docs/CONCEPT.mdx)
-* [Testing](/docs/TESTING.mdx)
-* [Upgrade-Guide](/docs/UPGRADE_GUIDE.mdx)
+* [Overview](templates/userDocs/OVERVIEW.mdx)
+* [Getting Started](templates/userDocs/QUICKSTART.mdx)
+* [Concept](templates/userDocs/CONCEPT.mdx)
 
 ## License
 >Copyright 2021 DataLbry Technologies UG

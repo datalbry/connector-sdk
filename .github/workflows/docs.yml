@@ -3,6 +3,12 @@ name: Release Documentation
 on:
   workflow_dispatch:
 
+  push:
+    branches:
+      - "main"
+    paths:
+      - "templates/**"
+
 jobs:
   Build:
     runs-on: ubuntu-latest
@@ -19,20 +25,35 @@ jobs:
       - uses: eskatos/gradle-command-action@v1
         name: Update Documentation
         with:
-          arguments: prepareDocs
+          arguments: |
+            prepareDocs
+            prepareTutorial
 
       - name: Release Documentation
-        uses: datalbry/copy_folder_to_another_repo_action@1.0.0
+        uses: datalbry/copy_folder_to_another_repo_action@1.0.1
         env:
           API_TOKEN_GITHUB: ${{ secrets.CI_TOKEN }}
         with:
-          source_folder: 'docs'
+          source_folder: 'docs/userDocs'
           destination_repo: 'datalbry/docs'
           destination_folder: 'docs/Integrations/Connector-SDK'
           destination_branch: 'main'
           user_email: ${{ secrets.CI_EMAIL }}
           user_name: ${{ secrets.CI_USERNAME }}
           commit_msg: '[CI:Connector-SDK] Release documentation'
+
+      - name: Release Tutorial
+        uses: datalbry/copy_folder_to_another_repo_action@1.0.1
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.CI_TOKEN }}
+        with:
+          source_folder: 'docs/tutorials'
+          destination_repo: 'datalbry/docs'
+          destination_folder: 'docs/Tutorials'
+          destination_branch: 'main'
+          user_email: ${{ secrets.CI_EMAIL }}
+          user_name: ${{ secrets.CI_USERNAME }}
+          commit_msg: '[CI:Connector-SDK] Release Tutorial'
 
 
 
