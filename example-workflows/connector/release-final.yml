@@ -1,0 +1,65 @@
+name: Release Final
+
+on:
+  workflow_dispatch:
+
+jobs:
+  Release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        name: Checkout
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v1
+        name: Setup Java
+        with:
+          java-version: 11
+
+      - id: install-secret-key
+        name: Install GnuPG Key
+        run: |
+          cat <(echo -e "${{ secrets.GNUPG_SECRET_KEY }}") | gpg --batch --import
+          gpg --list-secret-keys --keyid-format LONG
+
+      - name: Update Version
+        run: >
+          ./gradlew updateReleaseVersion -i
+
+      - uses: eskatos/gradle-command-action@v1
+        name: Fetch Dependencies
+        with:
+          arguments: dependencies
+
+      - uses: eskatos/gradle-command-action@v1
+        name: Push container image
+        with:
+          arguments: >
+            jib
+            -Pconnector.container.username=${{ secrets.CONTAINER_REGISTRY_USER }}
+            -Pconnector.container.password=${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
+
+      - uses: eskatos/gradle-command-action@v1
+        name: Register in Connector Registry
+        with:
+          arguments: >
+            registerConnector
+            -Pconnector.oidc.clientSecret=${{ secrets.CONNECTOR_REGISTRY_CLIENT_SECRET }}
+            -Pconnector.oidc.username=${{ secrets.CONNECTOR_CI_USER }}
+            -Pconnector.oidc.password=${{ secrets.CONNECTOR_CI_PASSWORD }}
+
+      - name: Tag
+        run: >
+          ./gradlew tag -i
+
+      - name: Generate Commit Message
+        run: |
+          echo "##[set-output name=message;][CI] Release version $(./gradlew -q printVersion)"
+        id: generate_commit_message
+
+      - name: Push Commit
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: ${{ steps.generate_commit_message.outputs.message }}
+          push_options: --follow-tags
