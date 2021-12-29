@@ -17,7 +17,6 @@ import org.gradle.api.tasks.TaskAction
 import org.jetbrains.kotlin.util.prefixIfNot
 import java.io.File
 import org.apache.http.client.methods.HttpPut
-import org.gradle.api.GradleException
 import org.gradle.api.logging.LogLevel
 import org.gradle.internal.impldep.com.google.api.client.http.HttpStatusCodes
 
@@ -79,8 +78,9 @@ open class RegisterConnectorTask: DefaultTask() {
     private fun buildConnectorJson(): String {
         val extension = project.extensions.getByType(ConnectorPluginExtension::class.java)
         val container = extension.container
-        val docSchemaFile = File("${project.buildDir.absolutePath}/${extension.documentSchemaPath}")
-        val configSchemaFile = File("${project.buildDir.absolutePath}/${extension.configSchemaPath}")
+
+        val schemaFile = File("${project.buildDir.absolutePath}/${extension.documentSchemaPath}")
+        val configFile = File("${project.buildDir.absolutePath}/${extension.configSchemaPath}")
 
         val root = json.nodeFactory.objectNode()
 
@@ -89,10 +89,10 @@ open class RegisterConnectorTask: DefaultTask() {
         id.put("version", extension.version)
 
         root.set<ObjectNode>("id", id)
-
-        root.set<JsonNode>("docSchema", jacksonObjectMapper().readTree(docSchemaFile))
-        root.set<JsonNode>("configSchema", jacksonObjectMapper().readTree(configSchemaFile))
-
+        if(schemaFile.exists()) {
+            root.set<JsonNode>("schema", jacksonObjectMapper().readTree(schemaFile))
+        }
+        root.set<JsonNode>("config", jacksonObjectMapper().readTree(configFile))
         root.put("image", "${container.repository}/${extension.name}:${extension.version}")
 
         return json.writeValueAsString(root)
