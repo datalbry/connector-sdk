@@ -3,6 +3,12 @@ plugins {
     id("signing")
 }
 
+version = rootProject.version
+group = rootProject.group
+
+val canSign = project.properties.keys
+    .any { it.startsWith("signing.") }
+
 publishing {
     publications {
         create<MavenPublication>("maven") {
@@ -13,12 +19,12 @@ publishing {
 }
 
 configure<SigningExtension> {
-    val shouldRun = (project.extra.properties["sign"] as String?).toBoolean()
-    if (shouldRun) {
+    if (canSign) {
         useGpgCmd()
         sign(publishing.publications["maven"])
     }
 }
+
 
 fun MavenPublication.pom() {
     pom {
@@ -50,9 +56,41 @@ fun MavenPublication.pom() {
 }
 
 fun MavenPublication.publication() {
-    val projectGroup = project.group as String
-    val projectVersion = project.version as String
-    artifactId = "${projectGroup.substringAfterLast(".")}-${project.name}"
-    version = projectVersion
+    val projectName = project.name
+        .removePrefix("core")
+        .removePrefix("-")
+    artifactId = buildArtifactName(
+        extractArtifactGroup(project.group as String),
+        rootProject.name,
+        projectName.ifEmpty { null }
+    )
     from(components["java"])
+}
+
+fun buildArtifactName(group: String? = null, project: String? = null, module: String? = null): String {
+    return removeConsecutive(listOfNotNull(group, project, module).flatMap { it.split('-') })
+        .joinToString("-")
+}
+
+fun buildHumanReadableName(name: String) = name
+    .splitToSequence('-')
+    .joinToString(" ", transform = String::capitalize)
+
+fun extractArtifactGroup(group: String): String? {
+    // split into parts by domain separator
+    val elements = group.split('.')
+    // drop the tld/domain part, e.g. io.datalbry
+    val withoutDomain = elements.drop(2)
+    // if anything remains, that’s our artifact group
+    return withoutDomain.lastOrNull()
+}
+
+fun <T> removeConsecutive(list: List<T>): List<T> {
+    val result = mutableListOf<T>()
+    for (el in list) {
+        if (el != result.lastOrNull()) {
+            result.add(el)
+        }
+    }
+    return result
 }
