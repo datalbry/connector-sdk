@@ -1,5 +1,7 @@
 plugins {
     id("datalbry.spring")
+    id("datalbry.publish-internal")
+    id("datalbry.publish-maven-central")
 }
 
 dependencies {

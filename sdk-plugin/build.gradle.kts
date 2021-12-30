@@ -1,6 +1,7 @@
 plugins {
     id("datalbry.kotlin")
-    id("datalbry.publication")
+    id("datalbry.publish-internal")
+    id("datalbry.publish-maven-central")
     id("java-gradle-plugin")
 }
 
