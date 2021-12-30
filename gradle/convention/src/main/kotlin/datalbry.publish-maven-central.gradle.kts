@@ -1,5 +1,4 @@
 plugins {
-    id("datalbry.publication")
     id("io.github.gradle-nexus.publish-plugin")
 }
 

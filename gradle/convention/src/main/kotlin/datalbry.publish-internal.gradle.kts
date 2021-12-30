@@ -1,5 +1,4 @@
 plugins {
-    id("datalbry.publication")
     id("maven-publish") apply false
 }
 
