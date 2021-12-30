@@ -13,8 +13,8 @@ repositories {
 dependencies {
     testImplementation(gradleTestKit())
     testImplementation(libs.junit.jupiter.api)
-    testRuntime(libs.junit.jupiter.core)
-    testRuntime(libs.junit.jupiter.engine)
+    testRuntimeOnly(libs.junit.jupiter.api)
+    testRuntimeOnly(libs.junit.jupiter.engine)
 
     implementation("org.apache.httpcomponents:httpclient:4.5.13")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.12.3")

@@ -31,9 +31,9 @@ jobs:
         name: Release
         with:
           arguments: >
-            publishMavenPublicationToSonatypeRepository
-            -PsonatypeUsername=${{ secrets.MAVENCENTRALUSERNAME }}
-            -PsonatypePassword=${{ secrets.MAVENCENTRALPASSWORD }}
+            publishMavenPublicationToMavenRepository
+            -Pmaven.registry.username=${{ secrets.REGISTRY_USER }}
+            -Pmaven.registry.password=${{ secrets.REGISTRY_TOKEN }} 
             -Psigning.gnupg.keyName=${{ secrets.GNUPG_SECRET_NAME }}
             -Psigning.gnupg.passphrase=${{ secrets.GNUPG_SECRET_PASSWORD }}
 
