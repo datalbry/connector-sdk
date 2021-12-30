@@ -1,23 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    id("datalbry.repositories")
     kotlin("jvm")
     `java-library`
     idea
     jacoco
-}
-
-val registryUrl = findPropertyOrEnv("maven.registry")
-fun findPropertyOrEnv(property: String): String? {
-    return (project.findProperty(property) as String?)
-        ?: System.getenv(property.replace('.', '_').toUpperCase())
-}
-repositories {
-    if (registryUrl != null) {
-        maven { url = uri(registryUrl) }
-    }
-    mavenCentral()
-    google()
 }
 
 version = project.rootProject.version
