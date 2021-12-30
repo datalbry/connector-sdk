@@ -13,7 +13,7 @@ repositories {
 dependencies {
     testImplementation(gradleTestKit())
     testImplementation(libs.junit.jupiter.api)
-    testRuntimeOnly(libs.junit.jupiter.api)
+    testRuntimeOnly(libs.junit.jupiter.core)
     testRuntimeOnly(libs.junit.jupiter.engine)
 
     implementation("org.apache.httpcomponents:httpclient:4.5.13")
