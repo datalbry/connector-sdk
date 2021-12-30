@@ -1,6 +1,8 @@
 plugins {
-    id("io.datalbry.plugin.semver") version "0.2.2"
     id("datalbry.kotlin")
+    id("datalbry.publish-internal")
+    id("datalbry.publish-maven-central")
+    id("io.datalbry.plugin.semver") version "0.2.2"
     idea
 }
 
