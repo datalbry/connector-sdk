@@ -4,7 +4,7 @@ precise = "0.1.1-alpha.1641477363"
 commons-config = "0.0.2"
 alxndria-client = "0.0.3"
 alxndria-testcontainer = "1.0.0"
-kotlin = "1.5.30"
+kotlin = "1.5.31"
 junit = "5.7.0"
 
 [libraries]
@@ -23,7 +23,7 @@ testcontainers-core = { module = "org.testcontainers:testcontainers", version.re
 datalbry-alxndria-client = { module = "io.datalbry.alxndria:alxndria-client-feign", version.ref = "alxndria-client" }
 datalbry-alxndria-testcontainer = { module = "io.datalbry.testcontainers:testcontainers-alxndria", version.ref = "alxndria-testcontainer"}
 datalbry-precise-api = { module = "io.datalbry.precise:precise-api", version.ref = "precise" }
-datalbry-precise-core = { module = "io.datalbry.precise:precise-core", version.ref = "precise" }
+datalbry-precise-core = { module = "io.datalbry.precise:precise", version.ref = "precise" }
 datalbry-precise-serialization-jackson = { module = "io.datalbry.precise:precise-serialization-jackson", version.ref = "precise" }
 datalbry-commons-config-api = { module = "io.datalbry.commons:commons-config-api", version.ref = "commons-config" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }

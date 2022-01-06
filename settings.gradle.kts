@@ -14,7 +14,7 @@ include(
 
 pluginManagement {
         plugins {
-                val kotlinVersion = "1.4.31"
+                val kotlinVersion = "1.5.31"
                 val springBootVersion = "2.3.5.RELEASE"
                 val springVersion = "1.0.9.RELEASE"
 
