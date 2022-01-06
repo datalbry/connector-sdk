@@ -1,6 +1,7 @@
 package io.datalbry.connector.plugin.task
 
 import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.datalbry.connector.plugin.ConnectorPluginExtension
@@ -8,17 +9,17 @@ import io.datalbry.connector.plugin.extensions.ConnectorRegistryExtension
 import io.datalbry.connector.plugin.extensions.OidcExtension
 import org.apache.http.client.entity.UrlEncodedFormEntity
 import org.apache.http.client.methods.HttpPost
+import org.apache.http.client.methods.HttpPut
 import org.apache.http.entity.StringEntity
 import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.http.message.BasicNameValuePair
 import org.apache.http.util.EntityUtils
 import org.gradle.api.DefaultTask
+import org.gradle.api.logging.LogLevel
 import org.gradle.api.tasks.TaskAction
+import org.gradle.internal.impldep.com.google.api.client.http.HttpStatusCodes
 import org.jetbrains.kotlin.util.prefixIfNot
 import java.io.File
-import org.apache.http.client.methods.HttpPut
-import org.gradle.api.logging.LogLevel
-import org.gradle.internal.impldep.com.google.api.client.http.HttpStatusCodes
 
 /**
  * The [RegisterConnectorTask] registers a Connector in a Connector Registry.
@@ -29,7 +30,7 @@ import org.gradle.internal.impldep.com.google.api.client.http.HttpStatusCodes
  *
  * @author timo gruen - 2021-06-12
  */
-open class RegisterConnectorTask: DefaultTask() {
+open class RegisterConnectorTask : DefaultTask() {
 
     private val json = jacksonObjectMapper()
     private val http = HttpClientBuilder.create().build()
@@ -84,12 +85,9 @@ open class RegisterConnectorTask: DefaultTask() {
 
         val root = json.nodeFactory.objectNode()
 
-        val id = json.nodeFactory.objectNode()
-        id.put("name", extension.name)
-        id.put("version", extension.version)
-
-        root.set<ObjectNode>("id", id)
-        if(schemaFile.exists()) {
+        root.set<ObjectNode>("id", buildConnectorIdJsonNode(extension))
+        // root.set<ObjectNode>("productInformation", buildProductInformationJsonNode(extension))
+        if (schemaFile.exists()) {
             root.set<JsonNode>("schema", jacksonObjectMapper().readTree(schemaFile))
         }
         root.set<JsonNode>("config", jacksonObjectMapper().readTree(configFile))
@@ -97,6 +95,31 @@ open class RegisterConnectorTask: DefaultTask() {
 
         return json.writeValueAsString(root)
     }
+
+    private fun buildConnectorIdJsonNode(extension: ConnectorPluginExtension): JsonNode {
+        val id = json.nodeFactory.objectNode()
+        id.put("name", extension.name)
+        id.put("version", extension.version)
+        return id
+    }
+
+    /*
+    private fun buildProductInformationJsonNode(extension: ConnectorPluginExtension): JsonNode {
+        val icons = json.nodeFactory.objectNode()
+        icons.put("light", File(extension.lightIconPath).readText())
+        icons.put("dark", File(extension.darkIconPath).readText())
+
+        val tags = json.nodeFactory.arrayNode()
+        extension.tags.forEach { tags.add(it) }
+
+        val productInformation = json.nodeFactory.objectNode()
+        productInformation.put("vendor", extension.vendor)
+        productInformation.put("productName", extension.productName)
+        productInformation.set<JsonNode>("icons", icons)
+        productInformation.set<ArrayNode>("tags", tags)
+        return productInformation
+    }
+     */
 
     private fun fetchOidcToken(): String {
         val extension = project.extensions.getByType(ConnectorPluginExtension::class.java)
