@@ -1,6 +1,6 @@
 [versions]
 testcontainers = "1.15.1"
-precise = "0.0.10"
+precise = "0.1.1-alpha.1641477363"
 commons-config = "0.0.2"
 alxndria-client = "0.0.3"
 alxndria-testcontainer = "1.0.0"

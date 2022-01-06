@@ -7,7 +7,13 @@ fun findPropertyOrEnv(property: String): String? {
 }
 repositories {
     registryUrl?.let {
-        maven { url = uri(registryUrl) }
+        maven {
+            url = uri(registryUrl)
+            credentials {
+                username = findPropertyOrEnv("maven.registry.username")
+                password = findPropertyOrEnv("maven.registry.password")
+            }
+        }
     }
 
     mavenCentral()
