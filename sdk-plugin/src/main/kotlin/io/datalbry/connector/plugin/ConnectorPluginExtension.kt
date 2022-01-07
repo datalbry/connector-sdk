@@ -21,11 +21,11 @@ abstract class ConnectorPluginExtension @Inject constructor(private val project:
     var configSchemaPath: String = project.propertyOrDefault("connector.configSchemaPath","generated/ksp/main/resources/META-INF/datalbry/schema-config.json")
     var documentSchemaPath: String = project.propertyOrDefault("connector.documentSchemaPath","generated/ksp/main/resources/META-INF/datalbry/schema.json")
 
-    // var lightIconPath : String = project.propertyOrDefault("connector.icon.light", "icons/light.svg")
-    // var darkIconPath : String = project.propertyOrDefault("connector.icon.dark", "icons/dark.svg")
-    // var productName: String = project.properties["connector.productName"] as String
-    // var vendor: String = project.properties["connector.vendor"] as String
-    // var tags: List<String> = (project.properties["connector.tags"] as String).split(",").map { it.trim() }
+    var lightIconPath : String = project.propertyOrDefault("connector.icon.light", "icons/light.svg")
+    var darkIconPath : String = project.propertyOrDefault("connector.icon.dark", "icons/dark.svg")
+    var productName: String = project.properties["connector.productName"] as String
+    var vendor: String = project.properties["connector.vendor"] as String
+    var tags: List<String> = (project.properties["connector.tags"] as String).split(",").map { it.trim() }
 
     var oidc: OidcExtension = OidcExtension(project)
     fun oidc(config: Action<in OidcExtension>) {

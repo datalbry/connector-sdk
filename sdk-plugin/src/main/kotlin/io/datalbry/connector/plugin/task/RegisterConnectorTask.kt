@@ -86,7 +86,7 @@ open class RegisterConnectorTask : DefaultTask() {
         val root = json.nodeFactory.objectNode()
 
         root.set<ObjectNode>("id", buildConnectorIdJsonNode(extension))
-        // root.set<ObjectNode>("productInformation", buildProductInformationJsonNode(extension))
+        root.set<ObjectNode>("productInformation", buildProductInformationJsonNode(extension))
         if (schemaFile.exists()) {
             root.set<JsonNode>("schema", jacksonObjectMapper().readTree(schemaFile))
         }
@@ -103,7 +103,6 @@ open class RegisterConnectorTask : DefaultTask() {
         return id
     }
 
-    /*
     private fun buildProductInformationJsonNode(extension: ConnectorPluginExtension): JsonNode {
         val icons = json.nodeFactory.objectNode()
         icons.put("light", File(extension.lightIconPath).readText())
@@ -119,7 +118,6 @@ open class RegisterConnectorTask : DefaultTask() {
         productInformation.set<ArrayNode>("tags", tags)
         return productInformation
     }
-     */
 
     private fun fetchOidcToken(): String {
         val extension = project.extensions.getByType(ConnectorPluginExtension::class.java)
