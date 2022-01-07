@@ -4,6 +4,10 @@ on:
   push:
     branches: [ main ]
 
+env:
+  MAVEN_REGISTRY_USERNAME: ${{ secrets.REGISTRY_USER }}
+  MAVEN_REGISTRY_PASSWORD: ${{ secrets.REGISTRY_TOKEN }}
+
 jobs:
   Release:
     runs-on: ubuntu-latest
@@ -30,10 +34,7 @@ jobs:
       - uses: eskatos/gradle-command-action@v1
         name: Build
         with:
-          arguments: >
-            build
-            -Pmaven.registry.username=${{ secrets.REGISTRY_USER }}
-            -Pmaven.registry.password=${{ secrets.REGISTRY_TOKEN }} 
+          arguments: build
 
       - id: install-secret-key
         name: Install GnuPG Key
@@ -50,8 +51,6 @@ jobs:
         with:
           arguments: >
             publishMavenPublicationToMavenRepository
-            -Pmaven.registry.username=${{ secrets.REGISTRY_USER }}
-            -Pmaven.registry.password=${{ secrets.REGISTRY_TOKEN }} 
             -Psigning.gnupg.keyName=${{ secrets.GNUPG_SECRET_NAME }}
             -Psigning.gnupg.passphrase=${{ secrets.GNUPG_SECRET_PASSWORD }}
 

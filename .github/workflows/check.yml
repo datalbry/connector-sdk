@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  MAVEN_REGISTRY_USERNAME: ${{ secrets.REGISTRY_USER }}
+  MAVEN_REGISTRY_PASSWORD: ${{ secrets.REGISTRY_TOKEN }}
+
 jobs:
   Build:
     runs-on: ubuntu-latest
@@ -29,10 +33,7 @@ jobs:
       - uses: eskatos/gradle-command-action@v1
         name: Fetch Dependencies
         with:
-          arguments: >
-            dependencies
-            -Pmaven.registry.username=${{ secrets.REGISTRY_USER }}
-            -Pmaven.registry.password=${{ secrets.REGISTRY_TOKEN }} 
+          arguments: dependencies
 
       - uses: eskatos/gradle-command-action@v1
         name: Assemble
