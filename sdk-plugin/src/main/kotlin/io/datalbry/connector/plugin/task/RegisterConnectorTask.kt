@@ -104,18 +104,33 @@ open class RegisterConnectorTask : DefaultTask() {
     }
 
     private fun buildProductInformationJsonNode(extension: ConnectorPluginExtension): JsonNode {
-        val icons = json.nodeFactory.objectNode()
-        icons.put("light", File(extension.lightIconPath).readText())
-        icons.put("dark", File(extension.darkIconPath).readText())
 
-        val tags = json.nodeFactory.arrayNode()
-        extension.tags.forEach { tags.add(it) }
+        /*
+        Possibilities:
+
+        1. if an icon is missing; then no icon is submitted
+        2. if property is set, then
+         */
+
 
         val productInformation = json.nodeFactory.objectNode()
         productInformation.put("vendor", extension.vendor)
         productInformation.put("productName", extension.productName)
-        productInformation.set<JsonNode>("icons", icons)
+
+        val lightIconFile = File(extension.lightIconPath)
+        val darkIconFile = File(extension.darkIconPath)
+
+        if (lightIconFile.exists() && darkIconFile.exists()) {
+            val icons = json.nodeFactory.objectNode()
+            icons.put("light", lightIconFile.readText())
+            icons.put("dark", darkIconFile.readText())
+            productInformation.set<JsonNode>("icons", icons)
+        }
+
+        val tags = json.nodeFactory.arrayNode()
+        extension.tags.forEach { tags.add(it) }
         productInformation.set<ArrayNode>("tags", tags)
+
         return productInformation
     }
 
