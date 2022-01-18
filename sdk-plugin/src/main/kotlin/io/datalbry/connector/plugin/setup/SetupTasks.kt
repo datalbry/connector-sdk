@@ -1,5 +1,6 @@
 package io.datalbry.connector.plugin.setup
 
+import io.datalbry.connector.plugin.task.PrintConnectorDocumentationNameTask
 import io.datalbry.connector.plugin.task.RegisterConnectorTask
 import org.gradle.api.Project
 
@@ -14,4 +15,6 @@ const val TASK_GROUP = "connector"
 fun Project.setupTasks() {
     val registerConnector = project.tasks.register("registerConnector", RegisterConnectorTask::class.java)
     registerConnector.orNull.let { group = TASK_GROUP }
+
+    val printConnectorDocumentationName = project.tasks.register("printConnectorDocumentationName", PrintConnectorDocumentationNameTask::class.java)
 }
