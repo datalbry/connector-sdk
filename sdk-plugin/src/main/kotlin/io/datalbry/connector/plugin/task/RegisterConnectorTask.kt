@@ -105,14 +105,6 @@ open class RegisterConnectorTask : DefaultTask() {
 
     private fun buildProductInformationJsonNode(extension: ConnectorPluginExtension): JsonNode {
 
-        /*
-        Possibilities:
-
-        1. if an icon is missing; then no icon is submitted
-        2. if property is set, then
-         */
-
-
         val productInformation = json.nodeFactory.objectNode()
         productInformation.put("vendor", extension.vendor)
         productInformation.put("productName", extension.productName)
@@ -121,10 +113,13 @@ open class RegisterConnectorTask : DefaultTask() {
         val darkIconFile = File(extension.darkIconPath)
 
         if (lightIconFile.exists() && darkIconFile.exists()) {
+            project.logger.info("Found icons and adding them")
             val icons = json.nodeFactory.objectNode()
             icons.put("light", lightIconFile.readText())
             icons.put("dark", darkIconFile.readText())
             productInformation.set<JsonNode>("icons", icons)
+        } else {
+            project.logger.info("Did not find icons, skipping them")
         }
 
         val tags = json.nodeFactory.arrayNode()
