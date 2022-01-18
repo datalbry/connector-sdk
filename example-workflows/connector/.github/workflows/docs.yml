@@ -11,7 +11,6 @@ on:
 
 env:
   API_TOKEN_GITHUB: ${{ secrets.CI_TOKEN }}
-  CONNECTOR_NAME: 'CHANGE ME' # TODO: change the connector name
   MAVEN_REGISTRY_USERNAME: ${{ secrets.REGISTRY_USER }}
   MAVEN_REGISTRY_PASSWORD: ${{ secrets.REGISTRY_TOKEN }}
 
@@ -41,13 +40,18 @@ jobs:
         with:
           arguments: prepareDocs
 
+      - name: Generate Connector Name
+        run: |
+          echo "$(./gradlew -q printVersion)"
+        id: generate_connector_name
+
       - name: Release Documentation
         uses: datalbry/copy_folder_to_another_repo_action@1.0.1
         with:
           source_folder: 'docs'
           destination_repo: 'datalbry/docs'
-          destination_folder: 'docs/Connectors/${{env.CONNECTOR_NAME}}'
+          destination_folder: 'docs/Connectors/${{steps.generate_connector_name.outputs.message}}'
           destination_branch: 'main'
           user_email: ${{ secrets.CI_EMAIL }}
           user_name: ${{ secrets.CI_USERNAME }}
-          commit_msg: '[CI:${{env.CONNECTOR_NAME}}] Release documentation'
+          commit_msg: '[CI:${{steps.generate_connector_name.outputs.message}}] Release documentation'
