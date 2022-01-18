@@ -42,7 +42,7 @@ jobs:
 
       - name: Generate Connector Name
         run: |
-          echo "$(./gradlew -q printVersion)"
+          echo "$( ./gradlew printConnectorDocumentationName -q)"
         id: generate_connector_name
 
       - name: Release Documentation
