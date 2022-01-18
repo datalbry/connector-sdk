@@ -9,6 +9,12 @@ on:
     paths:
       - "templates/docs/*"
 
+env:
+  API_TOKEN_GITHUB: ${{ secrets.CI_TOKEN }}
+  CONNECTOR_NAME: 'CHANGE ME' # TODO: change the connector name
+  MAVEN_REGISTRY_USERNAME: ${{ secrets.REGISTRY_USER }}
+  MAVEN_REGISTRY_PASSWORD: ${{ secrets.REGISTRY_TOKEN }}
+
 jobs:
   Build:
     runs-on: ubuntu-latest
@@ -22,6 +28,14 @@ jobs:
         with:
           java-version: 11
 
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
       - uses: eskatos/gradle-command-action@v1
         name: Update Documentation
         with:
@@ -29,9 +43,6 @@ jobs:
 
       - name: Release Documentation
         uses: datalbry/copy_folder_to_another_repo_action@1.0.1
-        env:
-          API_TOKEN_GITHUB: ${{ secrets.CI_TOKEN }}
-          CONNECTOR_NAME: 'CHANGE ME' # TODO: change the connector name
         with:
           source_folder: 'docs'
           destination_repo: 'datalbry/docs'
@@ -40,7 +51,3 @@ jobs:
           user_email: ${{ secrets.CI_EMAIL }}
           user_name: ${{ secrets.CI_USERNAME }}
           commit_msg: '[CI:${{env.CONNECTOR_NAME}}] Release documentation'
-
-
-
-

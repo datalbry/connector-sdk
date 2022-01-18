@@ -6,6 +6,14 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  MAVEN_REGISTRY_USERNAME: ${{ secrets.REGISTRY_USER }}
+  MAVEN_REGISTRY_PASSWORD: ${{ secrets.REGISTRY_TOKEN }}
+  # TODO: Change the next lines
+  DATALBRY_SOME_CONNECTOR_PROPERTY_ONE: ${{ secrets.DATALBRY_SOME_CONNECTOR_PROPERTY_ONE }}
+  DATALBRY_SOME_CONNECTOR_PROPERTY_TWO: ${{ secrets.DATALBRY_SOME_CONNECTOR_PROPERTY_TWO }}
+  DATALBRY_SOME_CONNECTOR_PROPERTY_THREE: ${{ secrets.DATALBRY_SOME_CONNECTOR_PROPERTY_THREE }}
+
 jobs:
   Build:
     runs-on: ubuntu-latest
@@ -18,6 +26,14 @@ jobs:
         name: Setup Java
         with:
           java-version: 11
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
 
       - uses: eskatos/gradle-command-action@v1
         name: Fetch Dependencies
@@ -32,10 +48,4 @@ jobs:
       - uses: eskatos/gradle-command-action@v1
         name: Tests
         with:
-          # TODO: set the properties correctly
-          arguments: >
-            test
-            -Pdatalbry.connector.property1.${{ secrets.TODO_CHANGE_ME }} 
-            -Pdatalbry.connector.property2.${{ secrets.TODO_CHANGE_ME }}
-            -Pdatalbry.connector.property3.${{ secrets.TODO_CHANGE_ME }}
-
+          arguments: test

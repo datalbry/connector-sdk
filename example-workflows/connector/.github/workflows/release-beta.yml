@@ -3,6 +3,14 @@ name: Release Beta
 on:
   workflow_dispatch:
 
+env:
+  MAVEN_REGISTRY_USERNAME: ${{ secrets.REGISTRY_USER }}
+  MAVEN_REGISTRY_PASSWORD: ${{ secrets.REGISTRY_TOKEN }}
+  # TODO: Change the next lines
+  DATALBRY_SOME_CONNECTOR_PROPERTY_ONE: ${{ secrets.DATALBRY_SOME_CONNECTOR_PROPERTY_ONE }}
+  DATALBRY_SOME_CONNECTOR_PROPERTY_TWO: ${{ secrets.DATALBRY_SOME_CONNECTOR_PROPERTY_TWO }}
+  DATALBRY_SOME_CONNECTOR_PROPERTY_THREE: ${{ secrets.DATALBRY_SOME_CONNECTOR_PROPERTY_THREE }}
+
 jobs:
   Release:
     runs-on: ubuntu-latest
@@ -23,6 +31,14 @@ jobs:
           cat <(echo -e "${{ secrets.GNUPG_SECRET_KEY }}") | gpg --batch --import
           gpg --list-secret-keys --keyid-format LONG
 
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
       - name: Update Version
         run: >
           ./gradlew updateBetaVersion -i
@@ -35,14 +51,10 @@ jobs:
       - uses: eskatos/gradle-command-action@v1
         name: Push container image
         with:
-          # TODO: set the properties correctly
           arguments: >
             jib
             -Pconnector.container.username=${{ secrets.CONTAINER_REGISTRY_USER }}
             -Pconnector.container.password=${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
-            -Pdatalbry.connector.property1.${{ secrets.TODO_CHANGE_ME }} 
-            -Pdatalbry.connector.property2.${{ secrets.TODO_CHANGE_ME }}
-            -Pdatalbry.connector.property3.${{ secrets.TODO_CHANGE_ME }}
 
       - uses: eskatos/gradle-command-action@v1
         name: Register in Connector Registry
