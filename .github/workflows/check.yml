@@ -3,6 +3,8 @@ name: CI
 on:
   pull_request:
     branches: [ main ]
+  push:
+    branches: [ main ]
 
 env:
   MAVEN_REGISTRY_USERNAME: ${{ secrets.REGISTRY_USER }}
