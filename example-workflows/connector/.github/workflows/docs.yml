@@ -22,28 +22,23 @@ jobs:
       - uses: actions/checkout@v2
         name: Checkout
 
-      - uses: actions/setup-java@v1
-        name: Setup Java
+      - uses: actions/setup-java@v2
         with:
-          java-version: 11
-
-      - name: Cache local Maven repository
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+          distribution: 'temurin'
+          java-version: '11'
+          cache: 'gradle'
 
       - uses: eskatos/gradle-command-action@v1
         name: Update Documentation
         with:
           arguments: prepareDocs
 
-      - name: Generate Connector Name
-        run: |
-          echo "$( ./gradlew printConnectorDocumentationName -q)"
+      - uses: eskatos/gradle-command-action@v1
+        name: Generate Connector Name
         id: generate_connector_name
+        with:
+          arguments: > 
+            printConnectorDocumentationName -q
 
       - name: Release Documentation
         uses: datalbry/copy_folder_to_another_repo_action@1.0.1
