@@ -1,12 +1,25 @@
 name: Release Alpha 
 
 on:
-  push:
+  workflow_run:
+    workflows:
+      - "CI"
     branches:
       - main
+    types:
+      - "completed"
+
+env:
+  MAVEN_REGISTRY_USERNAME: ${{ secrets.REGISTRY_USER }}
+  MAVEN_REGISTRY_PASSWORD: ${{ secrets.REGISTRY_TOKEN }}
+  # TODO: Change the next lines
+  EXAMPLE_PROPERTY_A: ${{ secrets.EXAMPLE_PROPERTY_A }}
+  EXAMPLE_PROPERTY_B: ${{ secrets.EXAMPLE_PROPERTY_B }}
+  EXAMPLE_PROPERTY_C: ${{ secrets.EXAMPLE_PROPERTY_C }}
 
 jobs:
   Release:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -14,16 +27,25 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-java@v1
-        name: Setup Java
+      - uses: actions/setup-java@v2
         with:
-          java-version: 11
+          distribution: 'temurin'
+          java-version: '11'
+          cache: 'gradle'
 
       - id: install-secret-key
         name: Install GnuPG Key
         run: |
           cat <(echo -e "${{ secrets.GNUPG_SECRET_KEY }}") | gpg --batch --import
           gpg --list-secret-keys --keyid-format LONG
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
 
       - name: Update Version
         run: >
@@ -37,14 +59,10 @@ jobs:
       - uses: eskatos/gradle-command-action@v1
         name: Push container image
         with:
-          # TODO: set the properties correctly
           arguments: >
             jib
             -Pconnector.container.username=${{ secrets.CONTAINER_REGISTRY_USER }}
             -Pconnector.container.password=${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
-            -Pdatalbry.connector.property1.${{ secrets.TODO_CHANGE_ME }} 
-            -Pdatalbry.connector.property2.${{ secrets.TODO_CHANGE_ME }}
-            -Pdatalbry.connector.property3.${{ secrets.TODO_CHANGE_ME }}
 
       - uses: eskatos/gradle-command-action@v1
         name: Register in Connector Registry

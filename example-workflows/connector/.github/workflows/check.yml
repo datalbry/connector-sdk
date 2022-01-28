@@ -6,6 +6,14 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  MAVEN_REGISTRY_USERNAME: ${{ secrets.REGISTRY_USER }}
+  MAVEN_REGISTRY_PASSWORD: ${{ secrets.REGISTRY_TOKEN }}
+  # TODO: Change the next lines
+  EXAMPLE_PROPERTY_A: ${{ secrets.EXAMPLE_PROPERTY_A }}
+  EXAMPLE_PROPERTY_B: ${{ secrets.EXAMPLE_PROPERTY_B }}
+  EXAMPLE_PROPERTY_C: ${{ secrets.EXAMPLE_PROPERTY_C }}
+
 jobs:
   Build:
     runs-on: ubuntu-latest
@@ -14,10 +22,11 @@ jobs:
       - uses: actions/checkout@v2
         name: Checkout
 
-      - uses: actions/setup-java@v1
-        name: Setup Java
+      - uses: actions/setup-java@v2
         with:
-          java-version: 11
+          distribution: 'temurin'
+          java-version: '11'
+          cache: 'gradle'
 
       - uses: eskatos/gradle-command-action@v1
         name: Fetch Dependencies
@@ -32,10 +41,4 @@ jobs:
       - uses: eskatos/gradle-command-action@v1
         name: Tests
         with:
-          # TODO: set the properties correctly
-          arguments: >
-            test
-            -Pdatalbry.connector.property1.${{ secrets.TODO_CHANGE_ME }} 
-            -Pdatalbry.connector.property2.${{ secrets.TODO_CHANGE_ME }}
-            -Pdatalbry.connector.property3.${{ secrets.TODO_CHANGE_ME }}
-
+          arguments: test
